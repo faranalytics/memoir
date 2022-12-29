@@ -6,101 +6,143 @@ export enum Level {
     ERROR = 10e4
 }
 
-export abstract class Formatter<T, S> {
-    abstract format(message: T): S;
+export interface Meta {
+    level: Level;
+    error?: Error;
+    func?: string;
+    url?: string;
+    line?: number;
+    col?: number;
 }
 
-export abstract class Handler<T, S> {
-
-    protected formatter?: Formatter<T, S>;
-    private level?: number;
-
-    constructor(level?: number) {
-        this.level = level;
-    }
-
-    abstract handle(message: T): void;
-
-    setFormatter(formatter: Formatter<T, S>) {
-        this.formatter = formatter;
-    }
-
-    setLevel(level: number) {
-        this.level = level;
-    }
+export abstract class BaseFormatter<MessageT, FormatT, MetaT> {
+    abstract format(message: MessageT, meta: MetaT): FormatT;
 }
 
-class StringFormatter extends Formatter<string, string> {
+export abstract class BaseHandler<MessageT, FormatT, MetaT> {
 
-    format(message: string): string {
-        return message;
-    }
+    protected formatter?: BaseFormatter<MessageT, FormatT, MetaT>;
+
+    abstract handle(message: MessageT, meta: MetaT): void;
+
+    abstract setFormatter(formatter: BaseFormatter<MessageT, FormatT, MetaT>): void;
 }
 
-class ObjectFormatter extends Formatter<object, string> {
+export abstract class BaseLogger<MessageT, FormatT, MetaT> {
 
-    format(message: object): string {
-        return JSON.stringify(message);
-    }
-}
+    protected handlers: Array<BaseHandler<MessageT, FormatT, MetaT>> = [];
+    protected parent?: BaseLogger<MessageT, FormatT, MetaT>;
 
-class ConsoleHandler extends Handler<string, string> {
-
-    handle(message: string) {
-        if (this.formatter) {
-            message = this.formatter.format(message);
-
-            console.log(message);
-        }
-    }
-}
-
-class Logger<T, S> {
-
-    private handlers: Array<Handler<T, S>>;
-    private parent?: Logger<T, S>;
-
-    constructor(parent?: Logger<T, S>) {
+    constructor(parent?: BaseLogger<MessageT, FormatT, MetaT>) {
         this.parent = parent;
-        this.handlers = [];
     }
 
-    addHandler(handler: Handler<T, S>) {
-        this.handlers.push(handler);
-    }
+    abstract log(message: MessageT, meta: MetaT): void;
 
-    log(message: T, level: number = Level.BASE-1) {
+    abstract addHandler(handler: BaseHandler<MessageT, FormatT, MetaT>): void;
+}
 
-        if (this.handlers) {
-            for (let handler of this?.handlers) {
-                handler.handle(message);
+export class Logger extends BaseLogger<string, string, Meta> {
+
+    static parseStackTrace(error: Error): any {
+        let match = error?.stack?.match(/^[^\n]+?\n[^\n]+?\n\s+at(?: (?<func>[^\s]+) \(| )(?<url>[^\n]+):(?<line>\d+):(?<col>\d+)/is);
+
+        let groups = match?.groups;
+
+        if (groups) {
+            return {
+                error,
+                func: groups['func'],
+                url: groups['url'],
+                line: groups['line'],
+                col: groups['col']
             }
         }
-
-        this.parent?.log(message, level);
     }
-}
 
-class LevelLogger extends Logger<string, string> {
+    log(message: string, meta: Meta) {
+
+        if (this.handlers.length) {
+            if (meta.error) {
+                meta = { ...meta, ...Logger.parseStackTrace(meta.error) };
+            }
+
+            for (let handler of this.handlers) {
+                handler.handle(message, meta);
+            }
+
+            this.parent?.log(message, meta);
+        }
+    }
 
     base(message: string) {
-        this.log(message, Level.BASE);
+        this.log(message, { level: Level.BASE, error: new Error() });
     }
 
     debug(message: string) {
-        this.log(message, Level.DEBUG);
-    }
-    
-    info(message: string) {
-        this.log(message, Level.INFO);
-    }
-    
-    warn(message: string) {
-        this.log(message, Level.WARN);
-    }
-    
-    error(message: string) {
-        this.log(message, Level.ERROR);
+        this.log(message, { level: Level.DEBUG, error: new Error() });
     }
 
+    info(message: string) {
+        this.log(message, { level: Level.INFO, error: new Error() });
+    }
+
+    warn(message: string) {
+        this.log(message, { level: Level.WARN, error: new Error() });
+    }
+
+    error(message: string) {
+        this.log(message, { level: Level.ERROR, error: new Error() });
+    }
+
+    addHandler(handler: BaseHandler<string, string, Meta>) {
+        this.handlers.push(handler);
+    }
 }
+
+export class ConsoleHandler extends BaseHandler<string, string, Meta> {
+
+    private level: number = Level.BASE;
+
+    handle(message: string, meta: Meta): void {
+
+        if (meta.level > this.level) {
+
+            if (this.formatter) {
+                message = this.formatter.format(message, meta);
+            }
+
+            if (meta.level == Level.ERROR) {
+                console.error(message);
+            }
+            else {
+                console.log(message);
+            }
+        }
+    }
+
+    setFormatter(formatter: BaseFormatter<string, string, Meta>) {
+        this.formatter = formatter;
+    }
+
+    setLevel(level: Level) {
+        this.level = level;
+    }
+}
+
+export class StringFormatter extends BaseFormatter<string, string, Meta> {
+
+    private formatter: (message: string, meta: Meta) => string;
+
+    constructor(formatter: (message: string, meta: Meta) => string) {
+        super();
+
+        this.formatter = formatter;
+    }
+
+    format(message: string, meta: Meta): string {
+        return this.formatter(message, meta);
+    }
+}
+
+export let rootLogger = new Logger();
