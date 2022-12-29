@@ -7,7 +7,8 @@ let handler = new ConsoleHandler();
 handler.setLevel(Level.DEBUG);
 
 let formatter = new StringFormatter(
-    (message: string, meta: Meta): string => `${new Date().toISOString()}:${meta.func}:${meta.url}:${meta.line}:${meta.col}:${message}`
+    (message: string, {level, func, url, line, col}: Meta): string => 
+    `${level}:${new Date().toISOString()}:${func}:${url}:${line}:${col}:${message}`
 );
 
 handler.setFormatter(formatter);
@@ -16,6 +17,6 @@ log.addHandler(handler);
 
 (function test() {
     log.info('TEST1');
-})()
+})();
 
-log.info('TEST2')
+log.debug('TEST2');

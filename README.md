@@ -18,26 +18,22 @@ handler.setLevel(Level.DEBUG);
 
 //  Create an instance of a Formatter.
 let formatter = new StringFormatter(
-    (message: string, meta: Meta): string => 
-    `${new Date().toISOString()}:${meta.func}:${meta.url}:${meta.line}:${meta.col}:${message}`
-    );
+    (message: string, {level, func, url, line, col}: Meta): string => 
+    `${level}:${new Date().toISOString()}:${func}:${url}:${line}:${col}:${message}`
+);
 //  Pass a function to the constructor of the Formatter that will format the message and optionally add metadata.
 
 
-//  The meta object contains the Level, the name of the function, the stack trace URL, the line number, and the column number. 
-interface Meta {
-    level: Level;
-    error?: Error;
-    func?: string;
-    url?: string;
-    line?: number;
-    col?: number;
-}
-
-// E.g., 
-// `${new Date().toISOString()}:${meta.func}:${meta.url}:${meta.line}:${meta.col}:${message}` 
-// will produce a log message:
-// 2022-12-29T21:38:23.297Z:test:file:///home/adpatter/workspace/faranalytics/memoir/test/dist/index.js:9:9:TEST1
+//  The meta object contains: 
+//  * the Level, 
+//  * the name of the function, 
+//  * the stack trace URL, 
+//  * the line number, 
+//  * and the column number. 
+//  E.g., 
+//  `${level}:${new Date().toISOString()}:${func}:${line}:${col}:${message}` 
+//  will produce a log message:
+//  INFO:2022-12-29T23:07:44.841Z:test:9:9:TEST
 
 
 //  Set the Formatter on the Handler.

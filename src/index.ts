@@ -7,23 +7,22 @@ export enum Level {
 }
 
 export interface Meta {
-    level: Level;
-    error?: Error;
+    level?: string;
     func?: string;
     url?: string;
-    line?: number;
-    col?: number;
+    line?: string;
+    col?: string;
 }
 
 export abstract class BaseFormatter<MessageT, FormatT, MetaT> {
-    abstract format(message: MessageT, meta: MetaT): FormatT;
+    abstract format(message: MessageT, meta: MetaT, ...args: any): FormatT;
 }
 
 export abstract class BaseHandler<MessageT, FormatT, MetaT> {
 
     protected formatter?: BaseFormatter<MessageT, FormatT, MetaT>;
 
-    abstract handle(message: MessageT, meta: MetaT): void;
+    abstract handle(message: MessageT, meta: MetaT, ...args: any): void;
 
     abstract setFormatter(formatter: BaseFormatter<MessageT, FormatT, MetaT>): void;
 }
@@ -37,66 +36,73 @@ export abstract class BaseLogger<MessageT, FormatT, MetaT> {
         this.parent = parent;
     }
 
-    abstract log(message: MessageT, meta: MetaT): void;
+    abstract log(message: MessageT, ...args: any): void;
 
     abstract addHandler(handler: BaseHandler<MessageT, FormatT, MetaT>): void;
 }
 
 export class Logger extends BaseLogger<string, string, Meta> {
 
-    static parseStackTrace(error: Error): any {
-        let match = error?.stack?.match(/^[^\n]+?\n[^\n]+?\n\s+at(?: (?<func>[^\s]+) \(| )(?<url>[^\n]+):(?<line>\d+):(?<col>\d+)/is);
+    static parseStackTrace(stack: string | undefined): Meta {
+
+        let match = stack?.match(/^[^\n]+?\n[^\n]+?\n[^\n]+?\n\s+at(?: (?<func>[^\s]+) \(| )(?<url>[^\n]+):(?<line>\d+):(?<col>\d+)/is);
 
         let groups = match?.groups;
 
         if (groups) {
             return {
-                error,
                 func: groups['func'],
                 url: groups['url'],
                 line: groups['line'],
                 col: groups['col']
             }
         }
+
+        return {};
     }
 
-    log(message: string, meta: Meta) {
+    log(message: string, level: number): void {
+
+        let parse = Logger.parseStackTrace(new Error().stack);
 
         if (this.handlers.length) {
-            if (meta.error) {
-                meta = { ...meta, ...Logger.parseStackTrace(meta.error) };
-            }
+
+            let meta = { ...{ level: Level[level] }, ...parse };
 
             for (let handler of this.handlers) {
-                handler.handle(message, meta);
+                handler.handle(message, meta, level);
             }
 
-            this.parent?.log(message, meta);
+            this.parent?.log(message, level);
         }
     }
 
     base(message: string) {
-        this.log(message, { level: Level.BASE, error: new Error() });
+        this.log(message, Level.BASE);
     }
 
     debug(message: string) {
-        this.log(message, { level: Level.DEBUG, error: new Error() });
+        this.log(message, Level.DEBUG);
     }
 
     info(message: string) {
-        this.log(message, { level: Level.INFO, error: new Error() });
+        this.log(message, Level.INFO);
     }
 
     warn(message: string) {
-        this.log(message, { level: Level.WARN, error: new Error() });
+        this.log(message, Level.WARN);
     }
 
     error(message: string) {
-        this.log(message, { level: Level.ERROR, error: new Error() });
+        this.log(message, Level.ERROR);
     }
 
     addHandler(handler: BaseHandler<string, string, Meta>) {
         this.handlers.push(handler);
+    }
+
+    removeHandler(handler: BaseHandler<string, string, Meta>) {
+        this.handlers = this.handlers.filter((value)=> value !== handler);
     }
 }
 
@@ -104,15 +110,15 @@ export class ConsoleHandler extends BaseHandler<string, string, Meta> {
 
     private level: number = Level.BASE;
 
-    handle(message: string, meta: Meta): void {
+    handle(message: string, meta: Meta, level: number): void {
 
-        if (meta.level > this.level) {
+        if (level >= this.level) {
 
             if (this.formatter) {
                 message = this.formatter.format(message, meta);
             }
 
-            if (meta.level == Level.ERROR) {
+            if (level == Level.ERROR) {
                 console.error(message);
             }
             else {

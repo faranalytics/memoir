@@ -19,57 +19,59 @@ export class BaseLogger {
     }
 }
 export class Logger extends BaseLogger {
-    static parseStackTrace(error) {
-        let match = error?.stack?.match(/^[^\n]+?\n[^\n]+?\n\s+at(?: (?<func>[^\s]+) \(| )(?<url>[^\n]+):(?<line>\d+):(?<col>\d+)/is);
+    static parseStackTrace(stack) {
+        let match = stack?.match(/^[^\n]+?\n[^\n]+?\n[^\n]+?\n\s+at(?: (?<func>[^\s]+) \(| )(?<url>[^\n]+):(?<line>\d+):(?<col>\d+)/is);
         let groups = match?.groups;
         if (groups) {
             return {
-                error,
                 func: groups['func'],
                 url: groups['url'],
                 line: groups['line'],
                 col: groups['col']
             };
         }
+        return {};
     }
-    log(message, meta) {
+    log(message, level) {
+        let parse = Logger.parseStackTrace(new Error().stack);
         if (this.handlers.length) {
-            if (meta.error) {
-                meta = { ...meta, ...Logger.parseStackTrace(meta.error) };
-            }
+            let meta = { ...{ level: Level[level] }, ...parse };
             for (let handler of this.handlers) {
-                handler.handle(message, meta);
+                handler.handle(message, meta, level);
             }
-            this.parent?.log(message, meta);
+            this.parent?.log(message, level);
         }
     }
     base(message) {
-        this.log(message, { level: Level.BASE, error: new Error() });
+        this.log(message, Level.BASE);
     }
     debug(message) {
-        this.log(message, { level: Level.DEBUG, error: new Error() });
+        this.log(message, Level.DEBUG);
     }
     info(message) {
-        this.log(message, { level: Level.INFO, error: new Error() });
+        this.log(message, Level.INFO);
     }
     warn(message) {
-        this.log(message, { level: Level.WARN, error: new Error() });
+        this.log(message, Level.WARN);
     }
     error(message) {
-        this.log(message, { level: Level.ERROR, error: new Error() });
+        this.log(message, Level.ERROR);
     }
     addHandler(handler) {
         this.handlers.push(handler);
     }
+    removeHandler(handler) {
+        this.handlers = this.handlers.filter((value) => value !== handler);
+    }
 }
 export class ConsoleHandler extends BaseHandler {
     level = Level.BASE;
-    handle(message, meta) {
-        if (meta.level > this.level) {
+    handle(message, meta, level) {
+        if (level >= this.level) {
             if (this.formatter) {
                 message = this.formatter.format(message, meta);
             }
-            if (meta.level == Level.ERROR) {
+            if (level == Level.ERROR) {
                 console.error(message);
             }
             else {
