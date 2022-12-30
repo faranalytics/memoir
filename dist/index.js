@@ -1,3 +1,5 @@
+export { BaseLogger, BaseHandler, BaseFormatter } from './base.js';
+import { BaseLogger, BaseHandler, BaseFormatter } from './base.js';
 export var Level;
 (function (Level) {
     Level[Level["BASE"] = -100] = "BASE";
@@ -17,17 +19,6 @@ export class Meta {
     constructor(level) {
         this.Level = level;
         this.level = Level[level];
-    }
-}
-export class BaseFormatter {
-}
-export class BaseHandler {
-}
-export class BaseLogger {
-    handlers = [];
-    parent;
-    constructor(parent) {
-        this.parent = parent;
     }
 }
 export class Logger extends BaseLogger {

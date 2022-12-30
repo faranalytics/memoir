@@ -80,25 +80,29 @@ objectLogger.info({'greeting':'Hello World.'});
 //  INFO:2022-12-30T00:24:05.680Z:test:38:33:{"greeting":"Hello World."}
 ```
 
-## How to build a custome Handler.
+## How to build a custom type-checked Handler.
 
-1. Extend the BaseHandle.
-2. 
+1. Extend the BaseHandler.
+2. Implement the Handler method.
+3. Add the Handler to a type compatible Logger.
+
 ```js
+import { BaseHandler, BaseFormatter, Meta } from 'memoir';
+
 export class CustomHandler extends BaseHandler<string, string, Meta> {
 
     private level: number = Level.BASE;
-    protected formatter?: BaseFormatter<MessageT, FormatT, Meta>;
+    protected formatter?: BaseFormatter<string, string, Meta>;
 
-    handle(message: string, meta: Meta, level: number): void {
+    handle(message: string, meta: Meta): void {
 
-        if (level >= this.level) {
+        if (meta.Level && meta.Level >= this.level) {
 
             if (this.formatter) {
 
                 let formattedMessage = this.formatter.format(message, meta);
 
-                if (level == Level.ERROR) {
+                if (meta.Level == Level.ERROR) {
                     console.error(formattedMessage);
                 }
                 else {
@@ -108,7 +112,7 @@ export class CustomHandler extends BaseHandler<string, string, Meta> {
         }
     }
 
-    setFormatter(formatter: BaseFormatter<MessageT, FormatT, Meta>) {
+    setFormatter(formatter: BaseFormatter<string, string, Meta>) {
         this.formatter = formatter;
     }
 

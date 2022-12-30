@@ -1,3 +1,6 @@
+export { BaseLogger, BaseHandler, BaseFormatter } from './base.js'
+import { BaseLogger, BaseHandler, BaseFormatter } from './base.js'
+
 export enum Level {
     BASE = -10e1,
     DEBUG = 10e1,
@@ -27,33 +30,6 @@ export class Meta implements IMeta {
         this.Level = level;
         this.level = Level[level];
     }
-}
-
-export abstract class BaseFormatter<MessageT, FormatT, MetaT> {
-    abstract format(message: MessageT, meta: MetaT): FormatT;
-}
-
-export abstract class BaseHandler<MessageT, FormatT, MetaT> {
-
-    protected abstract formatter?: BaseFormatter<MessageT, FormatT, MetaT>;
-
-    public abstract handle(message: MessageT, meta: MetaT): void;
-
-    public abstract setFormatter(formatter: BaseFormatter<MessageT, FormatT, MetaT>): void;
-}
-
-export abstract class BaseLogger<MessageT, FormatT, MetaT> {
-
-    protected handlers: Array<BaseHandler<MessageT, FormatT, MetaT>> = [];
-    protected parent?: BaseLogger<MessageT, FormatT, MetaT>;
-
-    constructor(parent?: BaseLogger<MessageT, FormatT, MetaT>) {
-        this.parent = parent;
-    }
-
-    abstract log(message: MessageT, meta: MetaT): void;
-
-    abstract addHandler(handler: BaseHandler<MessageT, FormatT, MetaT>): void;
 }
 
 export class Logger<MessageT, FormatT> extends BaseLogger<MessageT, FormatT, Meta> {
