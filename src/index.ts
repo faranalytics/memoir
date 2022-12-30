@@ -101,7 +101,7 @@ export class Logger<MessageT, FormatT> extends BaseLogger<MessageT, FormatT, Met
         this.handlers.push(handler);
     }
 
-    removeHandler(handler: BaseHandler<string, string, Meta>) {
+    removeHandler(handler: BaseHandler<MessageT, FormatT, Meta>) {
         this.handlers = this.handlers.filter((value) => value !== handler);
     }
 }

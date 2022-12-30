@@ -36,7 +36,7 @@ export declare class Logger<MessageT, FormatT> extends BaseLogger<MessageT, Form
     warn(message: MessageT): void;
     error(message: MessageT): void;
     addHandler(handler: BaseHandler<MessageT, FormatT, Meta>): void;
-    removeHandler(handler: BaseHandler<string, string, Meta>): void;
+    removeHandler(handler: BaseHandler<MessageT, FormatT, Meta>): void;
 }
 export declare class ConsoleHandler<MessageT, FormatT> extends BaseHandler<MessageT, FormatT, Meta> {
     private level;
