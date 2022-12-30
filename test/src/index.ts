@@ -1,4 +1,4 @@
-import { Logger, Level, Formatter, ConsoleHandler, IMeta } from 'memoir';
+import { Logger, ConsoleHandler, Formatter, Level, IMeta } from 'memoir';
 
 //  Create an instance of a Logger.
 let log = new Logger<string, string>();
@@ -10,8 +10,7 @@ let handler = new ConsoleHandler<string, string>();
 handler.setLevel(Level.DEBUG);
 
 //  Create an instance of a Formatter.
-//  Pass a function to the constructor of the Formatter
-//  that will format the message and optionally add metadata.
+//  Pass a function to the constructor of the Formatter that will format the message and add metadata.
 let formatter = new Formatter<string, string>(
     (message: string, { level, func, url, line, col }: IMeta): string =>
         `${level}:${new Date().toISOString()}:${func}:${line}:${col}:${message}`
