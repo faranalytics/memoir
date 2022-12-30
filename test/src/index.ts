@@ -29,3 +29,38 @@ log.info('Hello World.');
 
 (function test(){log.info('Hello World.');}());
 //  INFO:2022-12-30T00:22:43.073Z:test:28:24:Hello World.
+
+
+import { BaseHandler, BaseFormatter, Meta } from 'memoir';
+
+export class CustomHandler extends BaseHandler<string, string, Meta> {
+
+    private level: number = Level.BASE;
+    protected formatter?: BaseFormatter<string, string, Meta>;
+
+    handle(message: string, meta: Meta): void {
+
+        if (meta.Level && meta.Level >= this.level) {
+
+            if (this.formatter) {
+
+                let formattedMessage = this.formatter.format(message, meta);
+
+                if (meta.Level == Level.ERROR) {
+                    console.error(formattedMessage);
+                }
+                else {
+                    console.log(formattedMessage);
+                }
+            }
+        }
+    }
+
+    setFormatter(formatter: BaseFormatter<string, string, Meta>) {
+        this.formatter = formatter;
+    }
+
+    setLevel(level: Level) {
+        this.level = level;
+    }
+}
