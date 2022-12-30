@@ -72,8 +72,8 @@ objectHandler.setFormatter(objectFormatter);
 objectLogger.addHandler(objectHandler);
 
 objectLogger.info({'greeting':'Hello World.'}); 
-//  INFO:2022-12-30T00:21:13.664Z:undefined:33:14:{"message":"Hello World."}
+//  INFO:2022-12-30T00:21:13.664Z:undefined:33:14:{"greeting":"Hello World."}
 
 (function test(){objectLogger.info({'greeting':'Hello World.'});}());
-//  INFO:2022-12-30T00:24:05.680Z:test:38:33:{"message":"Hello World."}
+//  INFO:2022-12-30T00:24:05.680Z:test:38:33:{"greeting":"Hello World."}
 ```
