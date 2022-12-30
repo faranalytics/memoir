@@ -1,6 +1,6 @@
 # Memoir
 
-Memoir is a type checked logging facility with a simple and familiar interface - for server and client applications.
+Memoir is a type-checked logging facility with a simple and familiar interface - for server and client applications.
 
 ## Install
 
@@ -50,13 +50,13 @@ log.addHandler(handler);
 
 //  Log a message.
 log.info('Hello World.');
-// INFO:2022-12-30T00:22:05.981Z:undefined:26:5:Hello World.
+//  INFO:2022-12-30T00:22:05.981Z:undefined:26:5:Hello World.
 
 (function test(){log.info('Hello World.');}());
 //  INFO:2022-12-30T00:22:43.073Z:test:28:24:Hello World.
 ```
 
-## Build a type checked custom logger.
+## Build a custom type-checked logger.
 
 ```js
 //  This simple logger will log a JavaScript *object* as a JSON *string*.
@@ -71,9 +71,9 @@ objectHandler.setFormatter(objectFormatter);
 
 objectLogger.addHandler(objectHandler);
 
-objectLogger.info({'message':'Hello World.'}); 
+objectLogger.info({'greeting':'Hello World.'}); 
 //  INFO:2022-12-30T00:21:13.664Z:undefined:33:14:{"message":"Hello World."}
 
-(function test(){objectLogger.info({'message':'Hello World.'});}());
+(function test(){objectLogger.info({'greeting':'Hello World.'});}());
 //  INFO:2022-12-30T00:24:05.680Z:test:38:33:{"message":"Hello World."}
 ```
