@@ -23,24 +23,12 @@ let handler = new ConsoleHandler<string, string>();
 handler.setLevel(Level.DEBUG);
 
 //  Create an instance of a Formatter.
+//  Pass a function to the constructor of the Formatter
+//  that will format the message and optionally add metadata.
 let formatter = new Formatter<string, string>(
     (message: string, { level, func, url, line, col }: Meta): string =>
         `${level}:${new Date().toISOString()}:${func}:${line}:${col}:${message}`
 );
-//  Pass a function to the constructor of the Formatter that will format the message and optionally add metadata.
-
-
-//  The meta object contains: 
-//  * the Level, 
-//  * the name of the function, 
-//  * the stack trace URL, 
-//  * the line number, 
-//  * and the column number. 
-//  E.g., 
-//  `${level}:${new Date().toISOString()}:${func}:${line}:${col}:${message}` 
-//  will produce a log message:
-//  INFO:2022-12-29T23:07:44.841Z:test:9:9:TEST
-
 
 //  Set the Formatter on the Handler.
 handler.setFormatter(formatter);
@@ -56,10 +44,24 @@ log.info('Hello World.');
 //  INFO:2022-12-30T00:22:43.073Z:test:28:24:Hello World.
 ```
 
-## Build a custom type-checked logger.
+## The Meta Object.
+
+The formatter function passed to the constructor of the Formatter has the signature:
+
+`(formatter: (message: MessageT, meta: Meta) => FormatT`
+
+The meta object contains the properties: 
+* level: the Level, 
+* func: the name of the function, 
+* url: the stack trace URL,
+* line: the line number,
+* col: the column number. 
+
+## How to construct a custom type-checked logger.
+
+This logger will log a JavaScript *object* to the console as a JSON *string*.  The formatter will add the Date, function, line number, and column number to the log message.
 
 ```js
-//  This simple logger will log a JavaScript *object* as a JSON *string*.
 let objectLogger = new Logger<object, string>();
 let objectHandler = new ConsoleHandler<object, string>();
 let objectFormatter = new Formatter<object, string>(
@@ -76,4 +78,42 @@ objectLogger.info({'greeting':'Hello World.'});
 
 (function test(){objectLogger.info({'greeting':'Hello World.'});}());
 //  INFO:2022-12-30T00:24:05.680Z:test:38:33:{"greeting":"Hello World."}
+```
+
+## How to build a custome Handler.
+
+1. Extend the BaseHandle.
+2. 
+```js
+export class CustomHandler extends BaseHandler<string, string, Meta> {
+
+    private level: number = Level.BASE;
+    protected formatter?: BaseFormatter<MessageT, FormatT, Meta>;
+
+    handle(message: string, meta: Meta, level: number): void {
+
+        if (level >= this.level) {
+
+            if (this.formatter) {
+
+                let formattedMessage = this.formatter.format(message, meta);
+
+                if (level == Level.ERROR) {
+                    console.error(formattedMessage);
+                }
+                else {
+                    console.log(formattedMessage);
+                }
+            }
+        }
+    }
+
+    setFormatter(formatter: BaseFormatter<MessageT, FormatT, Meta>) {
+        this.formatter = formatter;
+    }
+
+    setLevel(level: Level) {
+        this.level = level;
+    }
+}
 ```

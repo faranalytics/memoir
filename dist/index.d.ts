@@ -5,31 +5,41 @@ export declare enum Level {
     WARN = 10000,
     ERROR = 100000
 }
-export interface Meta {
+export interface IMeta {
     level?: string;
     func?: string;
     url?: string;
     line?: string;
     col?: string;
 }
+export declare class Meta implements IMeta {
+    error?: Error;
+    Level?: Level;
+    level?: string;
+    func?: string;
+    url?: string;
+    line?: string;
+    col?: string;
+    constructor(level: Level);
+}
 export declare abstract class BaseFormatter<MessageT, FormatT, MetaT> {
-    abstract format(message: MessageT, meta: MetaT, ...args: any): FormatT;
+    abstract format(message: MessageT, meta: MetaT): FormatT;
 }
 export declare abstract class BaseHandler<MessageT, FormatT, MetaT> {
     protected abstract formatter?: BaseFormatter<MessageT, FormatT, MetaT>;
-    abstract handle(message: MessageT, meta: MetaT, ...args: any): void;
+    abstract handle(message: MessageT, meta: MetaT): void;
     abstract setFormatter(formatter: BaseFormatter<MessageT, FormatT, MetaT>): void;
 }
 export declare abstract class BaseLogger<MessageT, FormatT, MetaT> {
     protected handlers: Array<BaseHandler<MessageT, FormatT, MetaT>>;
     protected parent?: BaseLogger<MessageT, FormatT, MetaT>;
     constructor(parent?: BaseLogger<MessageT, FormatT, MetaT>);
-    abstract log(message: MessageT, ...args: any): void;
+    abstract log(message: MessageT, meta: MetaT): void;
     abstract addHandler(handler: BaseHandler<MessageT, FormatT, MetaT>): void;
 }
 export declare class Logger<MessageT, FormatT> extends BaseLogger<MessageT, FormatT, Meta> {
-    static parseStackTrace(stack: string | undefined): Meta;
-    log(message: MessageT, level: number): void;
+    static parseStackTrace(stack: string | undefined): IMeta;
+    log(message: MessageT, meta: Meta): void;
     base(message: MessageT): void;
     debug(message: MessageT): void;
     info(message: MessageT): void;
@@ -41,7 +51,7 @@ export declare class Logger<MessageT, FormatT> extends BaseLogger<MessageT, Form
 export declare class ConsoleHandler<MessageT, FormatT> extends BaseHandler<MessageT, FormatT, Meta> {
     private level;
     protected formatter?: BaseFormatter<MessageT, FormatT, Meta>;
-    handle(message: MessageT, meta: Meta, level: number): void;
+    handle(message: MessageT, meta: Meta): void;
     setFormatter(formatter: BaseFormatter<MessageT, FormatT, Meta>): void;
     setLevel(level: Level): void;
 }
@@ -50,5 +60,5 @@ export declare class Formatter<MessageT, FormatT> extends BaseFormatter<MessageT
     constructor(formatter: (message: MessageT, meta: Meta) => FormatT);
     format(message: MessageT, meta: Meta): FormatT;
 }
-export declare let rootLogger: Logger<string, string>;
+export declare let logger: Logger<string, string>;
 //# sourceMappingURL=index.d.ts.map

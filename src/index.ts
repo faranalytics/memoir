@@ -6,7 +6,7 @@ export enum Level {
     ERROR = 10e4
 }
 
-export interface Meta {
+export interface IMeta {
     level?: string;
     func?: string;
     url?: string;
@@ -14,15 +14,30 @@ export interface Meta {
     col?: string;
 }
 
+export class Meta implements IMeta {
+    error?: Error;
+    Level?: Level;
+    level?: string;
+    func?: string;
+    url?: string;
+    line?: string;
+    col?: string;
+
+    constructor(level: Level) {
+        this.Level = level;
+        this.level = Level[level];
+    }
+}
+
 export abstract class BaseFormatter<MessageT, FormatT, MetaT> {
-    abstract format(message: MessageT, meta: MetaT, ...args: any): FormatT;
+    abstract format(message: MessageT, meta: MetaT): FormatT;
 }
 
 export abstract class BaseHandler<MessageT, FormatT, MetaT> {
 
     protected abstract formatter?: BaseFormatter<MessageT, FormatT, MetaT>;
 
-    public abstract handle(message: MessageT, meta: MetaT, ...args: any): void;
+    public abstract handle(message: MessageT, meta: MetaT): void;
 
     public abstract setFormatter(formatter: BaseFormatter<MessageT, FormatT, MetaT>): void;
 }
@@ -36,14 +51,14 @@ export abstract class BaseLogger<MessageT, FormatT, MetaT> {
         this.parent = parent;
     }
 
-    abstract log(message: MessageT, ...args: any): void;
+    abstract log(message: MessageT, meta: MetaT): void;
 
     abstract addHandler(handler: BaseHandler<MessageT, FormatT, MetaT>): void;
 }
 
 export class Logger<MessageT, FormatT> extends BaseLogger<MessageT, FormatT, Meta> {
 
-    static parseStackTrace(stack: string | undefined): Meta {
+    static parseStackTrace(stack: string | undefined): IMeta {
 
         let match = stack?.match(/^[^\n]+?\n[^\n]+?\n[^\n]+?\n\s+at(?: (?<func>[^\s]+) \(| )(?<url>[^\n]+):(?<line>\d+):(?<col>\d+)/is);
 
@@ -61,40 +76,45 @@ export class Logger<MessageT, FormatT> extends BaseLogger<MessageT, FormatT, Met
         return {};
     }
 
-    log(message: MessageT, level: number): void {
+    log(message: MessageT, meta: Meta): void {
 
-        let parse = Logger.parseStackTrace(new Error().stack);
+        if (!meta.error) {
+            let error = new Error();
+            meta.error = error;
+        }
+
+        let parse = Logger.parseStackTrace(meta.error.stack);
 
         if (this.handlers.length) {
 
-            let meta = { ...{ level: Level[level] }, ...parse };
+            meta = { ...meta, ...parse };
 
             for (let handler of this.handlers) {
-                handler.handle(message, meta, level);
+                handler.handle(message, meta);
             }
 
-            this.parent?.log(message, level);
+            this.parent?.log(message, meta);
         }
     }
 
     base(message: MessageT) {
-        this.log(message, Level.BASE);
+        this.log(message, new Meta(Level.BASE));
     }
 
     debug(message: MessageT) {
-        this.log(message, Level.DEBUG);
+        this.log(message, new Meta(Level.DEBUG));
     }
 
     info(message: MessageT) {
-        this.log(message, Level.INFO);
+        this.log(message, new Meta(Level.INFO));
     }
 
     warn(message: MessageT) {
-        this.log(message, Level.WARN);
+        this.log(message, new Meta(Level.WARN));
     }
 
     error(message: MessageT) {
-        this.log(message, Level.ERROR);
+        this.log(message, new Meta(Level.ERROR));
     }
 
     addHandler(handler: BaseHandler<MessageT, FormatT, Meta>) {
@@ -111,15 +131,15 @@ export class ConsoleHandler<MessageT, FormatT> extends BaseHandler<MessageT, For
     private level: number = Level.BASE;
     protected formatter?: BaseFormatter<MessageT, FormatT, Meta>;
 
-    handle(message: MessageT, meta: Meta, level: number): void {
+    handle(message: MessageT, meta: Meta): void {
 
-        if (level >= this.level) {
+        if (meta.Level && meta.Level >= this.level) {
 
             if (this.formatter) {
 
                 let formattedMessage = this.formatter.format(message, meta);
 
-                if (level == Level.ERROR) {
+                if (meta.Level == Level.ERROR) {
                     console.error(formattedMessage);
                 }
                 else {
@@ -153,4 +173,4 @@ export class Formatter<MessageT, FormatT> extends BaseFormatter<MessageT, Format
     }
 }
 
-export let rootLogger = new Logger<string, string>();
+export let logger = new Logger<string, string>();

@@ -6,6 +6,19 @@ export var Level;
     Level[Level["WARN"] = 10000] = "WARN";
     Level[Level["ERROR"] = 100000] = "ERROR";
 })(Level || (Level = {}));
+export class Meta {
+    error;
+    Level;
+    level;
+    func;
+    url;
+    line;
+    col;
+    constructor(level) {
+        this.Level = level;
+        this.level = Level[level];
+    }
+}
 export class BaseFormatter {
 }
 export class BaseHandler {
@@ -31,30 +44,34 @@ export class Logger extends BaseLogger {
         }
         return {};
     }
-    log(message, level) {
-        let parse = Logger.parseStackTrace(new Error().stack);
+    log(message, meta) {
+        if (!meta.error) {
+            let error = new Error();
+            meta.error = error;
+        }
+        let parse = Logger.parseStackTrace(meta.error.stack);
         if (this.handlers.length) {
-            let meta = { ...{ level: Level[level] }, ...parse };
+            meta = { ...meta, ...parse };
             for (let handler of this.handlers) {
-                handler.handle(message, meta, level);
+                handler.handle(message, meta);
             }
-            this.parent?.log(message, level);
+            this.parent?.log(message, meta);
         }
     }
     base(message) {
-        this.log(message, Level.BASE);
+        this.log(message, new Meta(Level.BASE));
     }
     debug(message) {
-        this.log(message, Level.DEBUG);
+        this.log(message, new Meta(Level.DEBUG));
     }
     info(message) {
-        this.log(message, Level.INFO);
+        this.log(message, new Meta(Level.INFO));
     }
     warn(message) {
-        this.log(message, Level.WARN);
+        this.log(message, new Meta(Level.WARN));
     }
     error(message) {
-        this.log(message, Level.ERROR);
+        this.log(message, new Meta(Level.ERROR));
     }
     addHandler(handler) {
         this.handlers.push(handler);
@@ -66,11 +83,11 @@ export class Logger extends BaseLogger {
 export class ConsoleHandler extends BaseHandler {
     level = Level.BASE;
     formatter;
-    handle(message, meta, level) {
-        if (level >= this.level) {
+    handle(message, meta) {
+        if (meta.Level && meta.Level >= this.level) {
             if (this.formatter) {
                 let formattedMessage = this.formatter.format(message, meta);
-                if (level == Level.ERROR) {
+                if (meta.Level == Level.ERROR) {
                     console.error(formattedMessage);
                 }
                 else {
@@ -96,4 +113,4 @@ export class Formatter extends BaseFormatter {
         return this.formatter(message, meta);
     }
 }
-export let rootLogger = new Logger();
+export let logger = new Logger();
