@@ -45,11 +45,11 @@ log.info('Hello World.');
 
 ## The Meta Object.
 
-The formatter function passed to the constructor of the Formatter has the signature:
+The formatter function passed to the constructor of the Formatter can have the signature:
 
-`(formatter: (message: MessageT, meta: Meta) => FormatT`
+`(formatter: (message: MessageT, meta: IMeta) => FormatT`
 
-The meta object contains the properties: 
+The interface to the meta object contains the properties: 
 * level: the Level, 
 * func: the name of the function, 
 * url: the stack trace URL,
