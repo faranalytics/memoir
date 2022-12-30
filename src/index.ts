@@ -160,15 +160,15 @@ export class ConsoleHandler<MessageT, FormatT> extends BaseHandler<MessageT, For
 
 export class Formatter<MessageT, FormatT> extends BaseFormatter<MessageT, FormatT, Meta> {
 
-    private formatter: (message: MessageT, meta: Meta) => FormatT;
+    private formatter: (message: MessageT, meta: IMeta) => FormatT;
 
-    constructor(formatter: (message: MessageT, meta: Meta) => FormatT) {
+    constructor(formatter: (message: MessageT, meta: IMeta) => FormatT) {
         super();
 
         this.formatter = formatter;
     }
 
-    format(message: MessageT, meta: Meta): FormatT {
+    format(message: MessageT, meta: IMeta): FormatT {
         return this.formatter(message, meta);
     }
 }

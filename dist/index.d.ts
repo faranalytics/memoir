@@ -57,8 +57,8 @@ export declare class ConsoleHandler<MessageT, FormatT> extends BaseHandler<Messa
 }
 export declare class Formatter<MessageT, FormatT> extends BaseFormatter<MessageT, FormatT, Meta> {
     private formatter;
-    constructor(formatter: (message: MessageT, meta: Meta) => FormatT);
-    format(message: MessageT, meta: Meta): FormatT;
+    constructor(formatter: (message: MessageT, meta: IMeta) => FormatT);
+    format(message: MessageT, meta: IMeta): FormatT;
 }
 export declare let logger: Logger<string, string>;
 //# sourceMappingURL=index.d.ts.map
