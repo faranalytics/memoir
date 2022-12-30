@@ -50,7 +50,7 @@ log.info('Hello World.');
 //  INFO:2022-12-30T00:22:43.073Z:test:28:24:Hello World.
 ```
 
-## Easily build a typed custom logger.
+## Easily build a type checked custom logger.
 
 ```js
 //  This simple logger will log a JavaScript *object* as a JSON *string*.
