@@ -1,6 +1,12 @@
 # Memoir
 
-Memoir is a type checked logging facility with a simple and familiar interface - for server and client applications.  
+Memoir is a type checked logging facility with a simple and familiar interface - for server and client applications.
+
+## Install
+
+```
+npm install memoir
+```
 
 ## Usage
 
@@ -50,7 +56,7 @@ log.info('Hello World.');
 //  INFO:2022-12-30T00:22:43.073Z:test:28:24:Hello World.
 ```
 
-## Easily build a type checked custom logger.
+## Build a type checked custom logger.
 
 ```js
 //  This simple logger will log a JavaScript *object* as a JSON *string*.
