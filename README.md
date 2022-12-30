@@ -1,25 +1,25 @@
 # Memoir
 
-Memoir is a typed logging facility with a simple and familiar interface - for server and client applications.  
+Memoir is a type checked logging facility with a simple and familiar interface - for server and client applications.  
 
 ## Usage
 
 ```js
-import { Logger, Level, StringFormatter, ConsoleHandler, Meta } from 'memoir';
+import { Logger, Level, Formatter, ConsoleHandler, Meta } from 'memoir';
 
 //  Create an instance of a Logger.
-let log = new Logger();
+let log = new Logger<string, string>();
 
 //  Create an instance of a Handler.
-let handler = new ConsoleHandler();
+let handler = new ConsoleHandler<string, string>();
 
 //  Set the Level of the handler.
 handler.setLevel(Level.DEBUG);
 
 //  Create an instance of a Formatter.
-let formatter = new StringFormatter(
-    (message: string, {level, func, url, line, col}: Meta): string => 
-    `${level}:${new Date().toISOString()}:${func}:${url}:${line}:${col}:${message}`
+let formatter = new Formatter<string, string>(
+    (message: string, { level, func, url, line, col }: Meta): string =>
+        `${level}:${new Date().toISOString()}:${func}:${line}:${col}:${message}`
 );
 //  Pass a function to the constructor of the Formatter that will format the message and optionally add metadata.
 
@@ -44,4 +44,30 @@ log.addHandler(handler);
 
 //  Log a message.
 log.info('Hello World.');
+// INFO:2022-12-30T00:22:05.981Z:undefined:26:5:Hello World.
+
+(function test(){log.info('Hello World.');}());
+//  INFO:2022-12-30T00:22:43.073Z:test:28:24:Hello World.
+```
+
+## Easily build a typed custom logger.
+
+```js
+//  This simple logger will log a JavaScript *object* as a JSON *string*.
+let objectLogger = new Logger<object, string>();
+let objectHandler = new ConsoleHandler<object, string>();
+let objectFormatter = new Formatter<object, string>(
+    (objMessage, { level, func, url, line, col }) => 
+    `${level}:${new Date().toISOString()}:${func}:${line}:${col}:${JSON.stringify(objMessage)}`
+    );
+
+objectHandler.setFormatter(objectFormatter);
+
+objectLogger.addHandler(objectHandler);
+
+objectLogger.info({'message':'Hello World.'}); 
+//  INFO:2022-12-30T00:21:13.664Z:undefined:33:14:{"message":"Hello World."}
+
+(function test(){objectLogger.info({'message':'Hello World.'});}());
+//  INFO:2022-12-30T00:24:05.680Z:test:38:33:{"message":"Hello World."}
 ```

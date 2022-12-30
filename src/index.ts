@@ -20,11 +20,11 @@ export abstract class BaseFormatter<MessageT, FormatT, MetaT> {
 
 export abstract class BaseHandler<MessageT, FormatT, MetaT> {
 
-    protected formatter?: BaseFormatter<MessageT, FormatT, MetaT>;
+    protected abstract formatter?: BaseFormatter<MessageT, FormatT, MetaT>;
 
-    abstract handle(message: MessageT, meta: MetaT, ...args: any): void;
+    public abstract handle(message: MessageT, meta: MetaT, ...args: any): void;
 
-    abstract setFormatter(formatter: BaseFormatter<MessageT, FormatT, MetaT>): void;
+    public abstract setFormatter(formatter: BaseFormatter<MessageT, FormatT, MetaT>): void;
 }
 
 export abstract class BaseLogger<MessageT, FormatT, MetaT> {
@@ -41,7 +41,7 @@ export abstract class BaseLogger<MessageT, FormatT, MetaT> {
     abstract addHandler(handler: BaseHandler<MessageT, FormatT, MetaT>): void;
 }
 
-export class Logger extends BaseLogger<string, string, Meta> {
+export class Logger<MessageT, FormatT> extends BaseLogger<MessageT, FormatT, Meta> {
 
     static parseStackTrace(stack: string | undefined): Meta {
 
@@ -61,7 +61,7 @@ export class Logger extends BaseLogger<string, string, Meta> {
         return {};
     }
 
-    log(message: string, level: number): void {
+    log(message: MessageT, level: number): void {
 
         let parse = Logger.parseStackTrace(new Error().stack);
 
@@ -77,57 +77,59 @@ export class Logger extends BaseLogger<string, string, Meta> {
         }
     }
 
-    base(message: string) {
+    base(message: MessageT) {
         this.log(message, Level.BASE);
     }
 
-    debug(message: string) {
+    debug(message: MessageT) {
         this.log(message, Level.DEBUG);
     }
 
-    info(message: string) {
+    info(message: MessageT) {
         this.log(message, Level.INFO);
     }
 
-    warn(message: string) {
+    warn(message: MessageT) {
         this.log(message, Level.WARN);
     }
 
-    error(message: string) {
+    error(message: MessageT) {
         this.log(message, Level.ERROR);
     }
 
-    addHandler(handler: BaseHandler<string, string, Meta>) {
+    addHandler(handler: BaseHandler<MessageT, FormatT, Meta>) {
         this.handlers.push(handler);
     }
 
     removeHandler(handler: BaseHandler<string, string, Meta>) {
-        this.handlers = this.handlers.filter((value)=> value !== handler);
+        this.handlers = this.handlers.filter((value) => value !== handler);
     }
 }
 
-export class ConsoleHandler extends BaseHandler<string, string, Meta> {
+export class ConsoleHandler<MessageT, FormatT> extends BaseHandler<MessageT, FormatT, Meta> {
 
     private level: number = Level.BASE;
+    protected formatter?: BaseFormatter<MessageT, FormatT, Meta>;
 
-    handle(message: string, meta: Meta, level: number): void {
+    handle(message: MessageT, meta: Meta, level: number): void {
 
         if (level >= this.level) {
 
             if (this.formatter) {
-                message = this.formatter.format(message, meta);
-            }
 
-            if (level == Level.ERROR) {
-                console.error(message);
-            }
-            else {
-                console.log(message);
+                let formattedMessage = this.formatter.format(message, meta);
+
+                if (level == Level.ERROR) {
+                    console.error(formattedMessage);
+                }
+                else {
+                    console.log(formattedMessage);
+                }
             }
         }
     }
 
-    setFormatter(formatter: BaseFormatter<string, string, Meta>) {
+    setFormatter(formatter: BaseFormatter<MessageT, FormatT, Meta>) {
         this.formatter = formatter;
     }
 
@@ -136,19 +138,19 @@ export class ConsoleHandler extends BaseHandler<string, string, Meta> {
     }
 }
 
-export class StringFormatter extends BaseFormatter<string, string, Meta> {
+export class Formatter<MessageT, FormatT> extends BaseFormatter<MessageT, FormatT, Meta> {
 
-    private formatter: (message: string, meta: Meta) => string;
+    private formatter: (message: MessageT, meta: Meta) => FormatT;
 
-    constructor(formatter: (message: string, meta: Meta) => string) {
+    constructor(formatter: (message: MessageT, meta: Meta) => FormatT) {
         super();
 
         this.formatter = formatter;
     }
 
-    format(message: string, meta: Meta): string {
+    format(message: MessageT, meta: Meta): FormatT {
         return this.formatter(message, meta);
     }
 }
 
-export let rootLogger = new Logger();
+export let rootLogger = new Logger<string, string>();

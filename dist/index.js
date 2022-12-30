@@ -9,7 +9,6 @@ export var Level;
 export class BaseFormatter {
 }
 export class BaseHandler {
-    formatter;
 }
 export class BaseLogger {
     handlers = [];
@@ -66,16 +65,17 @@ export class Logger extends BaseLogger {
 }
 export class ConsoleHandler extends BaseHandler {
     level = Level.BASE;
+    formatter;
     handle(message, meta, level) {
         if (level >= this.level) {
             if (this.formatter) {
-                message = this.formatter.format(message, meta);
-            }
-            if (level == Level.ERROR) {
-                console.error(message);
-            }
-            else {
-                console.log(message);
+                let formattedMessage = this.formatter.format(message, meta);
+                if (level == Level.ERROR) {
+                    console.error(formattedMessage);
+                }
+                else {
+                    console.log(formattedMessage);
+                }
             }
         }
     }
@@ -86,7 +86,7 @@ export class ConsoleHandler extends BaseHandler {
         this.level = level;
     }
 }
-export class StringFormatter extends BaseFormatter {
+export class Formatter extends BaseFormatter {
     formatter;
     constructor(formatter) {
         super();

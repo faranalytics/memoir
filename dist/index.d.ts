@@ -16,7 +16,7 @@ export declare abstract class BaseFormatter<MessageT, FormatT, MetaT> {
     abstract format(message: MessageT, meta: MetaT, ...args: any): FormatT;
 }
 export declare abstract class BaseHandler<MessageT, FormatT, MetaT> {
-    protected formatter?: BaseFormatter<MessageT, FormatT, MetaT>;
+    protected abstract formatter?: BaseFormatter<MessageT, FormatT, MetaT>;
     abstract handle(message: MessageT, meta: MetaT, ...args: any): void;
     abstract setFormatter(formatter: BaseFormatter<MessageT, FormatT, MetaT>): void;
 }
@@ -27,27 +27,28 @@ export declare abstract class BaseLogger<MessageT, FormatT, MetaT> {
     abstract log(message: MessageT, ...args: any): void;
     abstract addHandler(handler: BaseHandler<MessageT, FormatT, MetaT>): void;
 }
-export declare class Logger extends BaseLogger<string, string, Meta> {
+export declare class Logger<MessageT, FormatT> extends BaseLogger<MessageT, FormatT, Meta> {
     static parseStackTrace(stack: string | undefined): Meta;
-    log(message: string, level: number): void;
-    base(message: string): void;
-    debug(message: string): void;
-    info(message: string): void;
-    warn(message: string): void;
-    error(message: string): void;
-    addHandler(handler: BaseHandler<string, string, Meta>): void;
+    log(message: MessageT, level: number): void;
+    base(message: MessageT): void;
+    debug(message: MessageT): void;
+    info(message: MessageT): void;
+    warn(message: MessageT): void;
+    error(message: MessageT): void;
+    addHandler(handler: BaseHandler<MessageT, FormatT, Meta>): void;
     removeHandler(handler: BaseHandler<string, string, Meta>): void;
 }
-export declare class ConsoleHandler extends BaseHandler<string, string, Meta> {
+export declare class ConsoleHandler<MessageT, FormatT> extends BaseHandler<MessageT, FormatT, Meta> {
     private level;
-    handle(message: string, meta: Meta, level: number): void;
-    setFormatter(formatter: BaseFormatter<string, string, Meta>): void;
+    protected formatter?: BaseFormatter<MessageT, FormatT, Meta>;
+    handle(message: MessageT, meta: Meta, level: number): void;
+    setFormatter(formatter: BaseFormatter<MessageT, FormatT, Meta>): void;
     setLevel(level: Level): void;
 }
-export declare class StringFormatter extends BaseFormatter<string, string, Meta> {
+export declare class Formatter<MessageT, FormatT> extends BaseFormatter<MessageT, FormatT, Meta> {
     private formatter;
-    constructor(formatter: (message: string, meta: Meta) => string);
-    format(message: string, meta: Meta): string;
+    constructor(formatter: (message: MessageT, meta: Meta) => FormatT);
+    format(message: MessageT, meta: Meta): FormatT;
 }
-export declare let rootLogger: Logger;
+export declare let rootLogger: Logger<string, string>;
 //# sourceMappingURL=index.d.ts.map
