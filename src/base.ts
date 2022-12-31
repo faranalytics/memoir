@@ -17,7 +17,7 @@ export abstract class BaseHandler<MessageT, FormatT, MetaT> {
         this.setFormatter = this.setFormatter.bind(this);
     }
 
-    public abstract handle(message: MessageT, meta: MetaT): void;
+    public abstract handle(message: MessageT, meta: MetaT): Promise<void> | void;
 
     public abstract setFormatter(formatter: BaseFormatter<MessageT, FormatT, MetaT>): void;
 }

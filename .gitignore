@@ -1,3 +1,4 @@
 paste
 node_modules
 /test/dist
+test.log*

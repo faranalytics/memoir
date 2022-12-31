@@ -1,4 +1,5 @@
 export { BaseLogger, BaseHandler, BaseFormatter } from './base.js'
+export { RotatingFileHandler } from './node.js';
 import { BaseLogger, BaseHandler, BaseFormatter } from './base.js'
 
 export enum Level {
@@ -36,7 +37,7 @@ export class Logger<MessageT, FormatT> extends BaseLogger<MessageT, FormatT, Met
 
     static parseStackTrace(stack: string | undefined): IMeta {
 
-        let match = stack?.match(/^[^\n]+?\n[^\n]+?\n[^\n]+?\n\s+at(?: (?<func>[^\s]+) \(| )(?<url>[^\n]+):(?<line>\d+):(?<col>\d+)/is);
+        let match = stack?.match(/^([^\n]+?\n){3}\s+at(?: (?<func>[^\s]+) \(| )(?<url>[^\n]+):(?<line>\d+):(?<col>\d+)/is);
 
         let groups = match?.groups;
 

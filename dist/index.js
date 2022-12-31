@@ -1,4 +1,5 @@
 export { BaseLogger, BaseHandler, BaseFormatter } from './base.js';
+export { RotatingFileHandler } from './node.js';
 import { BaseLogger, BaseHandler, BaseFormatter } from './base.js';
 export var Level;
 (function (Level) {
@@ -23,7 +24,7 @@ export class Meta {
 }
 export class Logger extends BaseLogger {
     static parseStackTrace(stack) {
-        let match = stack?.match(/^[^\n]+?\n[^\n]+?\n[^\n]+?\n\s+at(?: (?<func>[^\s]+) \(| )(?<url>[^\n]+):(?<line>\d+):(?<col>\d+)/is);
+        let match = stack?.match(/^([^\n]+?\n){3}\s+at(?: (?<func>[^\s]+) \(| )(?<url>[^\n]+):(?<line>\d+):(?<col>\d+)/is);
         let groups = match?.groups;
         if (groups) {
             return {

@@ -1,4 +1,5 @@
 export { BaseLogger, BaseHandler, BaseFormatter } from './base.js';
+export { RotatingFileHandler } from './node.js';
 import { BaseLogger, BaseHandler, BaseFormatter } from './base.js';
 export declare enum Level {
     BASE = -100,

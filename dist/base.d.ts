@@ -5,7 +5,7 @@ export declare abstract class BaseFormatter<MessageT, FormatT, MetaT> {
 export declare abstract class BaseHandler<MessageT, FormatT, MetaT> {
     protected abstract formatter?: BaseFormatter<MessageT, FormatT, MetaT>;
     constructor();
-    abstract handle(message: MessageT, meta: MetaT): void;
+    abstract handle(message: MessageT, meta: MetaT): Promise<void> | void;
     abstract setFormatter(formatter: BaseFormatter<MessageT, FormatT, MetaT>): void;
 }
 export declare abstract class BaseLogger<MessageT, FormatT, MetaT> {
