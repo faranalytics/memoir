@@ -46,7 +46,7 @@ export class RotatingFileHandler extends BaseHandler {
                                 await fs.rename(`${this.path}`, `${this.path}.1`);
                             }
                             else {
-                                await fs.rm(`${this.path}`);
+                                await fs.rm(this.path);
                             }
                         }
                     }

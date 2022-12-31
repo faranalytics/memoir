@@ -1,9 +1,7 @@
 import * as pth from 'node:path';
 import * as fs from 'node:fs/promises';
-import { BaseLogger, BaseHandler, BaseFormatter } from './base.js'
+import { BaseHandler, BaseFormatter } from './base.js'
 import { Level, Meta } from './index.js';
-import { STATUS_CODES } from 'node:http';
-import { INSPECT_MAX_BYTES } from 'node:buffer';
 
 interface FileHandlerOptions {
     path: string;
@@ -60,19 +58,18 @@ export class RotatingFileHandler extends BaseHandler<string, string, Meta> {
 
                     if (stats.isFile()) {
                         if (stats.size > this.bytes) {
-
                             for (let i = this.rotations - 1; i >= 1; i--) {
                                 let stats = await fs.stat(`${this.path}.${i}`);
                                 if (stats.isFile()) {
-                                    await fs.rename(`${this.path}.${i}`, `${this.path}.${i + 1}`)
+                                    await fs.rename(`${this.path}.${i}`, `${this.path}.${i + 1}`);
                                 }
                             }
 
                             if (this.rotations >= 1) {
-                                await fs.rename(`${this.path}`, `${this.path}.1`)
+                                await fs.rename(`${this.path}`, `${this.path}.1`);
                             }
                             else {
-                                await fs.rm(`${this.path}`);
+                                await fs.rm(this.path);
                             }
                         }
                     }
