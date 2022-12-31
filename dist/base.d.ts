@@ -1,8 +1,10 @@
 export declare abstract class BaseFormatter<MessageT, FormatT, MetaT> {
+    constructor();
     abstract format(message: MessageT, meta: MetaT): FormatT;
 }
 export declare abstract class BaseHandler<MessageT, FormatT, MetaT> {
     protected abstract formatter?: BaseFormatter<MessageT, FormatT, MetaT>;
+    constructor();
     abstract handle(message: MessageT, meta: MetaT): void;
     abstract setFormatter(formatter: BaseFormatter<MessageT, FormatT, MetaT>): void;
 }

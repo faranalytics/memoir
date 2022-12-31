@@ -35,6 +35,15 @@ export class Logger extends BaseLogger {
         }
         return {};
     }
+    constructor(parent) {
+        super(parent);
+        this.log = this.log.bind(this);
+        this.base = this.base.bind(this);
+        this.debug = this.debug.bind(this);
+        this.info = this.info.bind(this);
+        this.warn = this.warn.bind(this);
+        this.error = this.error.bind(this);
+    }
     log(message, meta) {
         if (!meta.error) {
             let error = new Error();
@@ -74,6 +83,12 @@ export class Logger extends BaseLogger {
 export class ConsoleHandler extends BaseHandler {
     level = Level.BASE;
     formatter;
+    constructor() {
+        super();
+        this.handle = this.handle.bind(this);
+        this.setFormatter = this.setFormatter.bind(this);
+        this.setLevel = this.setLevel.bind(this);
+    }
     handle(message, meta) {
         if (meta.Level && meta.Level >= this.level) {
             if (this.formatter) {

@@ -52,6 +52,16 @@ export class Logger<MessageT, FormatT> extends BaseLogger<MessageT, FormatT, Met
         return {};
     }
 
+    constructor(parent?: BaseLogger<MessageT, FormatT, Meta>) {
+        super(parent);
+        this.log = this.log.bind(this);
+        this.base = this.base.bind(this);
+        this.debug = this.debug.bind(this);
+        this.info = this.info.bind(this);
+        this.warn = this.warn.bind(this);
+        this.error = this.error.bind(this);
+    }
+
     log(message: MessageT, meta: Meta): void {
 
         if (!meta.error) {
@@ -107,6 +117,13 @@ export class ConsoleHandler<MessageT, FormatT> extends BaseHandler<MessageT, For
     private level: number = Level.BASE;
     protected formatter?: BaseFormatter<MessageT, FormatT, Meta>;
 
+    constructor() {
+        super();
+        this.handle = this.handle.bind(this);
+        this.setFormatter = this.setFormatter.bind(this);
+        this.setLevel = this.setLevel.bind(this);
+    }
+
     handle(message: MessageT, meta: Meta): void {
 
         if (meta.Level && meta.Level >= this.level) {
@@ -140,7 +157,6 @@ export class Formatter<MessageT, FormatT> extends BaseFormatter<MessageT, Format
 
     constructor(formatter: (message: MessageT, meta: IMeta) => FormatT) {
         super();
-
         this.formatter = formatter;
     }
 

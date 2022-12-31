@@ -26,6 +26,7 @@ export declare class Meta implements IMeta {
 }
 export declare class Logger<MessageT, FormatT> extends BaseLogger<MessageT, FormatT, Meta> {
     static parseStackTrace(stack: string | undefined): IMeta;
+    constructor(parent?: BaseLogger<MessageT, FormatT, Meta>);
     log(message: MessageT, meta: Meta): void;
     base(message: MessageT): void;
     debug(message: MessageT): void;
@@ -38,6 +39,7 @@ export declare class Logger<MessageT, FormatT> extends BaseLogger<MessageT, Form
 export declare class ConsoleHandler<MessageT, FormatT> extends BaseHandler<MessageT, FormatT, Meta> {
     private level;
     protected formatter?: BaseFormatter<MessageT, FormatT, Meta>;
+    constructor();
     handle(message: MessageT, meta: Meta): void;
     setFormatter(formatter: BaseFormatter<MessageT, FormatT, Meta>): void;
     setLevel(level: Level): void;
