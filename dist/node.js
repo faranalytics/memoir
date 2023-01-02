@@ -11,7 +11,6 @@ export class RotatingFileHandler extends BaseHandler {
     level = Level.BASE;
     formatter;
     deferred = Promise.resolve();
-    i = 0;
     constructor({ path, rotations = 0, bytes = 10e6, encoding = 'utf8', mode = 0o666 }) {
         super();
         this.handle = this.handle.bind(this);
@@ -36,17 +35,26 @@ export class RotatingFileHandler extends BaseHandler {
                     let stats = await fs.stat(this.path);
                     if (stats.isFile()) {
                         if (stats.size > this.bytes) {
-                            for (let i = this.rotations - 1; i >= 1; i--) {
-                                let stats = await fs.stat(`${this.path}.${i}`);
-                                if (stats.isFile()) {
-                                    await fs.rename(`${this.path}.${i}`, `${this.path}.${i + 1}`);
-                                }
-                            }
-                            if (this.rotations >= 1) {
-                                await fs.rename(`${this.path}`, `${this.path}.1`);
+                            if (this.rotations === 0) {
+                                await fs.rm(this.path);
                             }
                             else {
-                                await fs.rm(this.path);
+                                for (let i = this.rotations - 1; i >= 0; i--) {
+                                    let path;
+                                    if (i == 0) {
+                                        path = `${this.path}`;
+                                    }
+                                    else {
+                                        path = `${this.path}.${i}`;
+                                    }
+                                    try {
+                                        let stats = await fs.stat(path);
+                                        if (stats.isFile()) {
+                                            await fs.rename(path, `${this.path}.${i + 1}`);
+                                        }
+                                    }
+                                    catch (e) { /* flow-control */ }
+                                }
                             }
                         }
                     }

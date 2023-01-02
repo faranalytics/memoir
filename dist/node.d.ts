@@ -3,7 +3,7 @@ import { BaseHandler, BaseFormatter } from './base.js';
 import { Level, Meta } from './index.js';
 interface FileHandlerOptions {
     path: string;
-    rotations?: number;
+    rotations?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
     bytes?: number;
     encoding?: BufferEncoding;
     mode?: number;
@@ -17,7 +17,6 @@ export declare class RotatingFileHandler extends BaseHandler<string, string, Met
     private level;
     protected formatter?: BaseFormatter<string, string, Meta>;
     private deferred;
-    private i;
     constructor({ path, rotations, bytes, encoding, mode }: FileHandlerOptions);
     handle(message: string, meta: Meta): void;
     setFormatter(formatter: BaseFormatter<string, string, Meta>): void;
