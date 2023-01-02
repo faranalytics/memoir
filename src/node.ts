@@ -40,7 +40,7 @@ export class RotatingFileHandler extends BaseHandler<string, string, Meta> {
 
     handle(message: string, meta: Meta) {
 
-        if (meta.Level && meta.Level >= this.level) {
+        if (meta.level >= this.level) {
 
             if (this.formatter) {
                 message = this.formatter.format(message, meta);

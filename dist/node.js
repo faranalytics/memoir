@@ -24,7 +24,7 @@ export class RotatingFileHandler extends BaseHandler {
         this.mode = mode;
     }
     handle(message, meta) {
-        if (meta.Level && meta.Level >= this.level) {
+        if (meta.level >= this.level) {
             if (this.formatter) {
                 message = this.formatter.format(message, meta);
                 message = message + (message[message.length - 1] == '\n' ? '' : '\n');
