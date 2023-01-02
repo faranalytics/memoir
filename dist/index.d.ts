@@ -9,15 +9,15 @@ export declare enum Level {
     ERROR = 100000
 }
 export interface IMeta {
-    level?: number;
+    level: number;
     func?: string;
     url?: string;
     line?: string;
     col?: string;
 }
 export declare class Meta implements IMeta {
+    level: number;
     error?: Error;
-    level?: number;
     func?: string;
     url?: string;
     line?: string;
@@ -25,7 +25,12 @@ export declare class Meta implements IMeta {
     constructor(level: Level);
 }
 export declare class Logger<MessageT, FormatT> extends BaseLogger<MessageT, FormatT, Meta> {
-    static parseStackTrace(stack: string | undefined): IMeta;
+    static parseStackTrace(stack: string | undefined): {
+        func?: string;
+        url?: string;
+        line?: string;
+        col?: string;
+    };
     constructor(parent?: BaseLogger<MessageT, FormatT, Meta>);
     log(message: MessageT, meta: Meta): void;
     base(message: MessageT): void;

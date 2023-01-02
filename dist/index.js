@@ -10,8 +10,8 @@ export var Level;
     Level[Level["ERROR"] = 100000] = "ERROR";
 })(Level || (Level = {}));
 export class Meta {
-    error;
     level;
+    error;
     func;
     url;
     line;

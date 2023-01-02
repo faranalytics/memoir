@@ -11,7 +11,7 @@ export enum Level {
 }
 
 export interface IMeta {
-    level?: number;
+    level: number;
     func?: string;
     url?: string;
     line?: string;
@@ -19,8 +19,8 @@ export interface IMeta {
 }
 
 export class Meta implements IMeta {
+    level: number;
     error?: Error;
-    level?: number;
     func?: string;
     url?: string;
     line?: string;
@@ -33,7 +33,7 @@ export class Meta implements IMeta {
 
 export class Logger<MessageT, FormatT> extends BaseLogger<MessageT, FormatT, Meta> {
 
-    static parseStackTrace(stack: string | undefined): IMeta {
+    static parseStackTrace(stack: string | undefined): { func?: string, url?: string, line?: string, col?: string} {
 
         let match = stack?.match(/^([^\n]+?\n){3}\s+at(?: (?<func>[^\s]+) \(| )(?<url>[^\n]+):(?<line>\d+):(?<col>\d+)/is);
 
