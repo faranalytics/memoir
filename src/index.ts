@@ -11,6 +11,7 @@ export enum Level {
 }
 
 export interface IMeta {
+    Level?: Level;
     level?: string;
     func?: string;
     url?: string;
@@ -20,7 +21,7 @@ export interface IMeta {
 
 export class Meta implements IMeta {
     error?: Error;
-    Level?: Level;
+    Level: Level;
     level?: string;
     func?: string;
     url?: string;
