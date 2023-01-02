@@ -11,8 +11,7 @@ export enum Level {
 }
 
 export interface IMeta {
-    Level?: Level;
-    level?: string;
+    level?: number;
     func?: string;
     url?: string;
     line?: string;
@@ -21,16 +20,14 @@ export interface IMeta {
 
 export class Meta implements IMeta {
     error?: Error;
-    Level: Level;
-    level?: string;
+    level?: number;
     func?: string;
     url?: string;
     line?: string;
     col?: string;
 
     constructor(level: Level) {
-        this.Level = level;
-        this.level = Level[level];
+        this.level = level;
     }
 }
 
@@ -128,13 +125,13 @@ export class ConsoleHandler<MessageT, FormatT> extends BaseHandler<MessageT, For
 
     handle(message: MessageT, meta: Meta): void {
 
-        if (meta.Level && meta.Level >= this.level) {
+        if (meta.level && meta.level >= this.level) {
 
             if (this.formatter) {
 
                 let formattedMessage = this.formatter.format(message, meta);
 
-                if (meta.Level == Level.ERROR) {
+                if (meta.level == Level.ERROR) {
                     console.error(formattedMessage);
                 }
                 else {

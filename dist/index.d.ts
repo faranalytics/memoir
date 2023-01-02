@@ -9,8 +9,7 @@ export declare enum Level {
     ERROR = 100000
 }
 export interface IMeta {
-    Level?: Level;
-    level?: string;
+    level?: number;
     func?: string;
     url?: string;
     line?: string;
@@ -18,8 +17,7 @@ export interface IMeta {
 }
 export declare class Meta implements IMeta {
     error?: Error;
-    Level: Level;
-    level?: string;
+    level?: number;
     func?: string;
     url?: string;
     line?: string;

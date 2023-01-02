@@ -11,15 +11,13 @@ export var Level;
 })(Level || (Level = {}));
 export class Meta {
     error;
-    Level;
     level;
     func;
     url;
     line;
     col;
     constructor(level) {
-        this.Level = level;
-        this.level = Level[level];
+        this.level = level;
     }
 }
 export class Logger extends BaseLogger {
@@ -91,10 +89,10 @@ export class ConsoleHandler extends BaseHandler {
         this.setLevel = this.setLevel.bind(this);
     }
     handle(message, meta) {
-        if (meta.Level && meta.Level >= this.level) {
+        if (meta.level && meta.level >= this.level) {
             if (this.formatter) {
                 let formattedMessage = this.formatter.format(message, meta);
-                if (meta.Level == Level.ERROR) {
+                if (meta.level == Level.ERROR) {
                     console.error(formattedMessage);
                 }
                 else {
