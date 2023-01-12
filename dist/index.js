@@ -34,6 +34,8 @@ export class Logger extends BaseLogger {
         }
         return {};
     }
+    level = Level.ERROR;
+    handlers = [];
     constructor(parent) {
         super(parent);
         this.log = this.log.bind(this);
@@ -74,13 +76,28 @@ export class Logger extends BaseLogger {
     }
     addHandler(handler) {
         this.handlers.push(handler);
+        if (handler.level < this.level) {
+            this.level = handler.level;
+        }
     }
     removeHandler(handler) {
-        this.handlers = this.handlers.filter((value) => value !== handler);
+        let handlers = [];
+        this.level = Level.ERROR;
+        for (let _handler of this.handlers) {
+            if (_handler != handler) {
+                handlers.push(_handler);
+                if (_handler.level < this.level) {
+                    this.level = _handler.level;
+                }
+            }
+        }
+        this.handlers = handlers;
     }
 }
-export class ConsoleHandler extends BaseHandler {
+export class LevelHandler extends BaseHandler {
     level = Level.BASE;
+}
+export class ConsoleHandler extends LevelHandler {
     formatter;
     constructor() {
         super();

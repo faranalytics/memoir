@@ -33,7 +33,7 @@ export class Meta implements IMeta {
 
 export class Logger<MessageT, FormatT> extends BaseLogger<MessageT, FormatT, Meta> {
 
-    static parseStackTrace(stack: string | undefined): { func?: string, url?: string, line?: string, col?: string} {
+    static parseStackTrace(stack: string | undefined): { func?: string, url?: string, line?: string, col?: string } {
 
         let match = stack?.match(/^([^\n]+?\n){3}\s+at(?: (?<func>[^\s]+) \(| )(?<url>[^\n]+):(?<line>\d+):(?<col>\d+)/is);
 
@@ -50,6 +50,10 @@ export class Logger<MessageT, FormatT> extends BaseLogger<MessageT, FormatT, Met
 
         return {};
     }
+
+    public level: number = Level.ERROR;
+    
+    protected handlers: Array<LevelHandler<MessageT, FormatT>> = [];
 
     constructor(parent?: BaseLogger<MessageT, FormatT, Meta>) {
         super(parent);
@@ -102,18 +106,34 @@ export class Logger<MessageT, FormatT> extends BaseLogger<MessageT, FormatT, Met
         this.log(message, new Meta(Level.ERROR));
     }
 
-    addHandler(handler: BaseHandler<MessageT, FormatT, Meta>) {
+    addHandler(handler: LevelHandler<MessageT, FormatT>) {
         this.handlers.push(handler);
+        if (handler.level < this.level) {
+            this.level = handler.level;
+        }
     }
 
-    removeHandler(handler: BaseHandler<MessageT, FormatT, Meta>) {
-        this.handlers = this.handlers.filter((value) => value !== handler);
+    removeHandler(handler: LevelHandler<MessageT, FormatT>) {
+        let handlers = [];
+        this.level = Level.ERROR;
+        for (let _handler of this.handlers) {
+            if (_handler != handler){
+                handlers.push(_handler);
+                if (_handler.level < this.level) {
+                    this.level = _handler.level;
+                }
+            }
+        }
+        this.handlers = handlers;
     }
 }
 
-export class ConsoleHandler<MessageT, FormatT> extends BaseHandler<MessageT, FormatT, Meta> {
+export abstract class LevelHandler<MessageT, FormatT> extends BaseHandler<MessageT, FormatT, Meta> {
+    public level: number = Level.BASE;
+}
 
-    private level: number = Level.BASE;
+export class ConsoleHandler<MessageT, FormatT> extends LevelHandler<MessageT,FormatT> {
+
     protected formatter?: BaseFormatter<MessageT, FormatT, Meta>;
 
     constructor() {

@@ -31,6 +31,8 @@ export declare class Logger<MessageT, FormatT> extends BaseLogger<MessageT, Form
         line?: string;
         col?: string;
     };
+    level: number;
+    protected handlers: Array<LevelHandler<MessageT, FormatT>>;
     constructor(parent?: BaseLogger<MessageT, FormatT, Meta>);
     log(message: MessageT, meta: Meta): void;
     base(message: MessageT): void;
@@ -38,11 +40,13 @@ export declare class Logger<MessageT, FormatT> extends BaseLogger<MessageT, Form
     info(message: MessageT): void;
     warn(message: MessageT): void;
     error(message: MessageT): void;
-    addHandler(handler: BaseHandler<MessageT, FormatT, Meta>): void;
-    removeHandler(handler: BaseHandler<MessageT, FormatT, Meta>): void;
+    addHandler(handler: LevelHandler<MessageT, FormatT>): void;
+    removeHandler(handler: LevelHandler<MessageT, FormatT>): void;
 }
-export declare class ConsoleHandler<MessageT, FormatT> extends BaseHandler<MessageT, FormatT, Meta> {
-    private level;
+export declare abstract class LevelHandler<MessageT, FormatT> extends BaseHandler<MessageT, FormatT, Meta> {
+    level: number;
+}
+export declare class ConsoleHandler<MessageT, FormatT> extends LevelHandler<MessageT, FormatT> {
     protected formatter?: BaseFormatter<MessageT, FormatT, Meta>;
     constructor();
     handle(message: MessageT, meta: Meta): void;
