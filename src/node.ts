@@ -19,7 +19,7 @@ export class RotatingFileHandler extends BaseHandler<string, string, Meta> {
     private encoding: BufferEncoding;
     private mode: number;
 
-    private level: number = Level.BASE;
+    public level: number = Level.BASE;
     protected formatter?: BaseFormatter<string, string, Meta>;
 
     private deferred: Promise<any> = Promise.resolve();

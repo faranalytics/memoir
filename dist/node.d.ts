@@ -14,7 +14,7 @@ export declare class RotatingFileHandler extends BaseHandler<string, string, Met
     private bytes;
     private encoding;
     private mode;
-    private level;
+    level: number;
     protected formatter?: BaseFormatter<string, string, Meta>;
     private deferred;
     constructor({ path, rotations, bytes, encoding, mode }: FileHandlerOptions);
