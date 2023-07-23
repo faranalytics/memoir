@@ -27,8 +27,9 @@ consoleHandler.setLevel(Level.DEBUG);
 // Create an instance of a Formatter.
 // Pass a function to the constructor of the Formatter that will format the message and add metadata.
 let formatter = new MetaFormatter<string, string>(
-    (message: string, { name, level, func, url, line, col }: IMeta): string =>
-        `${name}:${level}:${new Date().toISOString()}:${func}:${line}:${col}:${message}`
+    (message: string, { name, level, func, url, line, col }: IMeta): string => {
+        return `${name}:${level}:${new Date().toISOString()}:${func}:${line}:${col}:${message}`
+    }
 );
 
 // Set the Formatter on the Handler.
@@ -51,9 +52,9 @@ for (let i = 0; i < 1e1; i++) {
 
 let objectLogger = new LevelLogger<object, string>({ name: 'example 2' });
 let objectHandler = new ConsoleHandler<object, string>();
-let objectFormatter = new MetaFormatter<object, string>((objMessage: object, { name, level, func, url, line, col }: IMeta) =>
-    `${name}:${level}:${new Date().toISOString()}:${func}:${line}:${col}:${JSON.stringify(objMessage)}`
-);
+let objectFormatter = new MetaFormatter<object, string>((objMessage: object, { name, level, func, url, line, col }: IMeta) => {
+    return `${name}:${level}:${new Date().toISOString()}:${func}:${line}:${col}:${JSON.stringify(objMessage)}`
+});
 
 objectHandler.setFormatter(objectFormatter);
 
@@ -64,6 +65,7 @@ objectLogger.info({ 'greeting': 'Hello World.' });
 
 (function test() { objectLogger.info({ 'greeting': 'Hello World.' }); }());
 // INFO:2022-12-30T00:24:05.680Z:test:38:33:{"greeting":"Hello World."}
+
 ```
 
 ## The Meta Object.
