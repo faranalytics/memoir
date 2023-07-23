@@ -85,7 +85,7 @@ The interface to the meta object contains the properties:
 
 This logger will log a JavaScript *object* to the console as a JSON *string*.  The formatter will add the Logger Name, Date, function, line number, and column number to the log message.
 
-```js
+```ts
 let objectLogger = new LevelLogger<object, string>();
 let objectHandler = new ConsoleHandler<object, string>();
 let objectFormatter = new Formatter<object, string>(
@@ -110,7 +110,7 @@ objectLogger.info({'greeting':'Hello World.'});
 2. Implement the Handler method.
 3. Add the Handler to a type compatible Logger.
 
-```js
+```ts
 import { BaseHandler, BaseFormatter, Meta } from 'memoir';
 
 export class CustomHandler extends BaseHandler<string, string, Meta> {
