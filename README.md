@@ -10,7 +10,7 @@ npm install memoir
 
 ## Usage
 
-```js
+```ts
 import { LevelLogger, ConsoleHandler, MetaFormatter, Level, IMeta, RotatingFileHandler } from 'memoir';
 
 // Create an instance of a Logger.
