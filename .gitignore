@@ -1,0 +1,13 @@
+/**/*
+!.gitignore
+!.npmignore
+!tsconfig.json
+!LICENSE
+!/src
+!/src/*
+!/test
+!/test/package.json
+!/test/tsconfig.json
+!/test/src
+!/test/src/*
+!/*.*
