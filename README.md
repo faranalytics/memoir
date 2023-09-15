@@ -13,7 +13,7 @@ Memoir provides a framework for building custom `Logger`, `Handler`, or `Formatt
   - [FileHandler Logger](#filehandler-logger)
 - [How To](#how-to)
     - [How to build a type-checked custom Memoir Handler.](#how-to-build-a-type-checked-custom-memoir-handler)
-    
+
 ## Install
 ```bash
 npm install memoir
@@ -79,7 +79,7 @@ Memoir provides a performant `Logger` class named `LevelLogger` that implements 
 TypeScript will enforce the usage of the optional chaining operator when calling `LevelLogger`'s methods. Please see the examples for how to use the `LevelLogger` interface.
 
 ## Examples
-### Console Logger
+### ConsoleHandler Logger
 In this simple example you will create a `LevelLogger`.  The `LevelLogger`'s `Handler` will be set to log at the `DEBUG` Level; however, the `LevelLogger` level will be set to `INFO`, which will log `INFO`, `WARN`, and `ERROR` messages; hence, this ensures that frequent calls throughout the codebase to `log.debug` will never be evaluated.  This is achieved by using JavaScript's [Optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator.
 #### Code
 ```ts
@@ -108,7 +108,7 @@ Console Handler Example 1:INFO:2023-09-15T20:05:10.631Z:test:12:30:Hello World.
 Console Handler Example 1:DEBUG:2023-09-15T20:05:10.632Z:undefined:14:12:The LevelLogger's `level` property has been set to Level.DEBUG; hence, the method is called.
 ```
 
-### FileHandler Logger
+### RotatingFileHandler Logger
 #### Code
 ```ts
 let log = new LevelLogger<string, string>({ name: 'Rotating File Handler Example', level: Level.INFO }); // Create an instance of a Logger.
