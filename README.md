@@ -9,8 +9,8 @@ Memoir provides a framework for building custom `Logger`, `Handler`, or `Formatt
 - [Concepts](#concepts)
 - [Performant Logging](#performant-logging)
 - [Examples](#examples)
-  - [Console Logger](#console-logger)
-  - [FileHandler Logger](#filehandler-logger)
+  - [ConsoleHandler Logger](#console-logger)
+  - [RotatingFileHandler Logger](#filehandler-logger)
 - [How To](#how-to)
     - [How to build a type-checked custom Memoir Handler.](#how-to-build-a-type-checked-custom-memoir-handler)
 
