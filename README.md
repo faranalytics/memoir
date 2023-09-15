@@ -11,8 +11,9 @@ Memoir provides a framework for building custom `Logger`, `Handler`, or `Formatt
 - [Examples](#examples)
   - [Console Logger](#console-logger)
   - [FileHandler Logger](#filehandler-logger)
-- [How To]
-    - [How to build a type-checked custom Memoir Handler.]
+- [How To](#how-to)
+    - [How to build a type-checked custom Memoir Handler.](#how-to-build-a-type-checked-custom-memoir-handler)
+    
 ## Install
 ```bash
 npm install memoir
