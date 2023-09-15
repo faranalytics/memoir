@@ -20,7 +20,7 @@ npm install memoir
 ```
 
 ## Concepts
-Memoir implements concepts that are familiar in the logging domain i.e., `Levels`, `Loggers`, `Handlers`, and `Formatters`.  In addition to these familiar concepts, Memoir features a `Metadata` object that contains information about the logged message (e.g., the name of the function). It is passed to `Formatters` that support it.  
+Memoir implements concepts that are familiar in the logging domain i.e., `Levels`, `Loggers`, `Handlers`, and `Formatters`.  In addition to these familiar concepts, Memoir features a `Metadata` object that contains information about the logged message (e.g., the name of the function). It may be passed to `Formatters` that support it.  
 
 The following concepts are a subset of Memoir classes that are of practical use.  These concepts are used in the provided [`Examples`](#examples).
 
@@ -40,7 +40,7 @@ The following concepts are a subset of Memoir classes that are of practical use.
 - `line` `<string>` The line number where the `Logger` method was called.
 - `col` `<string>` The column number where the `Logger` method was called.
 
-The `Metadata` object is passed to a `Formatter` that supports `Metadata`.
+The `Metadata` object is passed to a `Formatter` that supports it.
 
 ### memoir.LevelLogger<MessageT, FormatT>(options)
 - Extends: <memoir.MetadataLogger>
@@ -54,7 +54,7 @@ The `Metadata` object is passed to a `Formatter` that supports `Metadata`.
 `levelLogger.addHandler(handler)`
 - `handler` `memoir.MetadataHandler` A Memoir `Handler` that supports a `Metadata` argument.
 
-The LevelLogger implementation is unique in that it is assigned a `Level` in its constuctor or a `Level` is set using its `setLevel` method.  The `LevelLogger` will configure its interface according to the log `Level` it is set to.  JavaScript's [optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator can be used in order to only log messages that meet the specified `Level` constraint.
+> The LevelLogger implementation is unique in that it may be assigned a `Level` in its constuctor or a `Level` is set using its `setLevel` method.  The `LevelLogger` will configure its interface according to the log `Level` it is set to.  JavaScript's [optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator can be used in order to only log messages that meet the specified `Level` constraint.  This strategy is aimed at improving performance.
 
 ### memoir.MetadataHandler<MessageT, FormatT>()
 - Extends: <memoir.Handler>
