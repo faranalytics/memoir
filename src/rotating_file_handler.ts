@@ -13,7 +13,7 @@ interface FileHandlerOptions {
     mode?: number;
 }
 
-export class RotatingFileHandler extends MetadataHandler<string, string, Metadata> {
+export class RotatingFileHandler extends MetadataHandler<string, string> {
 
     private path: string;
     private rotations: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;

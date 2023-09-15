@@ -1,11 +1,13 @@
 
-import { Formatter } from "./abstract.js";
+import { Formatter, Handler } from "./abstract.js";
+import { Metadata } from "./metadata.js";
 
-export abstract class MetadataHandler<MessageT, FormatT, Metadata> {
+export abstract class MetadataHandler<MessageT, FormatT> extends Handler<MessageT, FormatT, Metadata> {
 
     protected formatter?: Formatter<MessageT, FormatT, Metadata>;
 
     constructor() {
+        super();
         this.handle = this.handle.bind(this);
         this.setFormatter = this.setFormatter.bind(this);
     }

@@ -1,9 +1,10 @@
-import { LevelLogger, ConsoleHandler, MetadataFormatter, Level, Metadata, RotatingFileHandler } from 'memoir';
+import { LevelLogger, MetadataFormatter, Level, Metadata, RotatingFileHandler } from 'memoir';
 
-let log = new LevelLogger<string, string>({ name: 'Rotating File Handler Example', level: Level.INFO }); // Create an instance of a Logger.
-let fileHandler = new RotatingFileHandler({ path: './test.log', rotations: 5}); // Create an instance of a Handler.
-let formatter = new MetadataFormatter<string, string>(
+const log = new LevelLogger<string, string>({ name: 'Rotating File Handler Example', level: Level.INFO }); // Create an instance of a Logger.
+const fileHandler = new RotatingFileHandler({ path: './test.log', rotations: 5}); // Create an instance of a Handler.
+const formatter = new MetadataFormatter<string, string>(
     // Pass a function to the constructor of the Formatter that will format the message and add metadata.
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (message: string, { name, level, func, url, line, col }: Metadata): string =>
         `${name}:${level}:${new Date().toISOString()}:${func}:${line}:${col}:${message}`
 ); // Create an instance of a Formatter.
