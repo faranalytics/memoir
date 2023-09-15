@@ -1,11 +1,11 @@
-import { BaseLogger, BaseLoggerOptions, Level, LevelHandler } from './abstract.js';
-import {Metadata} from './meta.js';
+import { Logger, LoggerOptions, Level, LevelHandler } from './abstract.js';
+import {Metadata} from './metadata.js';
 
-export class MetadataLogger<MessageT, FormatT> extends BaseLogger<MessageT, FormatT, Metadata> {
+export class MetadataLogger<MessageT, FormatT> extends Logger<MessageT, FormatT, Metadata> {
 
     public handlers: Array<LevelHandler<MessageT, FormatT, Metadata>> = [];
 
-    constructor(options: BaseLoggerOptions = { name: '' }, ...loggers: Array<BaseLogger<MessageT, FormatT, Metadata>>) {
+    constructor(options: LoggerOptions = { name: '' }, ...loggers: Array<Logger<MessageT, FormatT, Metadata>>) {
         super(options, ...loggers);
         this.log = this.log.bind(this);
     }

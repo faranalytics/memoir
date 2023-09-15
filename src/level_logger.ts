@@ -1,9 +1,9 @@
-import { Metadata } from './meta.js';
-import { MetadataLogger } from './meta_logger.js';
-import { BaseLogger, BaseLoggerOptions, Level } from "./abstract.js";
+import { Metadata } from './metadata.js';
+import { MetadataLogger } from './metadata_logger.js';
+import { Logger, LoggerOptions, Level } from "./abstract.js";
 
 export interface LevelLoggerOptions {
-    level: Level;
+    level?: Level;
 }
 
 export class LevelLogger<MessageT, FormatT> extends MetadataLogger<MessageT, FormatT> {
@@ -18,17 +18,17 @@ export class LevelLogger<MessageT, FormatT> extends MetadataLogger<MessageT, For
 
     constructor({ 
         name = '', 
-        level = Level.DEBUG
-    }: BaseLoggerOptions & LevelLoggerOptions, 
-    ...loggers: Array<BaseLogger<MessageT, FormatT, Metadata>>
+        level = Level.BASE
+    }: LoggerOptions & LevelLoggerOptions, 
+    ...loggers: Array<Logger<MessageT, FormatT, Metadata>>
     ) {
         super({ name }, ...loggers);
         this.level = level;
 
-        this.init();
+        this.configure();
     }
 
-    private init() {
+    private configure() {
 
         delete this.base;
         delete this.debug;
@@ -69,6 +69,6 @@ export class LevelLogger<MessageT, FormatT> extends MetadataLogger<MessageT, For
 
     public setLevel(level: Level) {
         this.level = level;
-        this.init();
+        this.configure();
     }
 }

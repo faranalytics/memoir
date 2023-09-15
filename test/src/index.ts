@@ -1,27 +1,27 @@
 import { LevelLogger, ConsoleHandler, MetadataFormatter, Level, IMetadata, RotatingFileHandler } from 'memoir';
 
-let log = new LevelLogger<string, string>({ 'name': 'example 1' , level:Level.INFO}); // Create an instance of a Logger.
+let log = new LevelLogger<string, string>({ name: 'Console Logger', level: Level.INFO }); // Create an instance of a Logger.
 let consoleHandler = new ConsoleHandler<string, string>(); // Create an instance of a Handler.
-consoleHandler.setLevel(Level.DEBUG); // Set the Level of the handler.
-// Create an instance of a Formatter.
-// Pass a function to the constructor of the Formatter that will format the message and add metadata.
 let formatter = new MetadataFormatter<string, string>(
+    // Pass a function to the constructor of the Formatter that will format the message and add metadata.
     (message: string, { name, level, func, url, line, col }: IMetadata): string =>
         `${name}:${level}:${new Date().toISOString()}:${func}:${line}:${col}:${message}`
-);
+); // Create an instance of a Formatter.
+
+consoleHandler.setLevel(Level.DEBUG); // Set the Level of the Handler.
 consoleHandler.setFormatter(formatter); // Set the Formatter on the Handler.
 log.addHandler(consoleHandler); // Add the Handler to the Logger.
 
-log.debug?.('Because the `level` is set to Level.INFO, this method is never called.');
+log.debug?.("Because the LevelLogger's `level` property is set to Level.INFO, this method is never called.");
 log.info?.('Hello World.'); // Log a Hello World to the console.
 (function test() { log.info?.('Hello World.'); }());
 log.setLevel(Level.DEBUG);
-log.debug?.('Now the `level` has been set to Level.DEBUG; hence, this method is called.');
+log.debug?.("The LevelLogger's `level` property has been set to Level.DEBUG; hence, the method is called.");
 
-/*Output:
-example 1:INFO:2023-09-15T04:23:20.088Z:undefined:11:11:Hello World.
-example 1:INFO:2023-09-15T04:23:20.095Z:test:13:30:Hello World.
-example 1:DEBUG:2023-09-15T04:23:20.095Z:undefined:16:12:Now the `level` has been set to Level.DEBUG; hence, this method is called.
+/*Output
+Console Logger:INFO:2023-09-15T04:29:12.762Z:undefined:11:11:Hello World.
+Console Logger:INFO:2023-09-15T04:29:12.768Z:test:12:30:Hello World.
+Console Logger:DEBUG:2023-09-15T04:29:12.769Z:undefined:14:12:Now the `level` has been set to Level.DEBUG; hence, this method is called.
 */
 
 // let objectLogger = new LevelLogger<object, string>({ name: 'example 2' , level: Level.DEBUG});

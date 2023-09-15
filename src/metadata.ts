@@ -1,15 +1,6 @@
 import { Level } from './abstract.js';
 
-export interface IMetadata {
-    name: string;
-    level: keyof typeof Level;
-    func?: string;
-    url?: string;
-    line?: string;
-    col?: string;
-}
-
-export class Metadata implements IMetadata {
+export class Metadata {
     name: string;
     level: keyof typeof Level;
     error?: Error;
