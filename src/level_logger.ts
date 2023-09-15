@@ -16,11 +16,11 @@ export class LevelLogger<MessageT, FormatT> extends MetadataLogger<MessageT, For
 
     private level: Level;
 
-    constructor({ 
-        name = '', 
+    constructor({
+        name = '',
         level = Level.BASE
-    }: LoggerOptions & LevelLoggerOptions, 
-    ...loggers: Array<Logger<MessageT, FormatT, Metadata>>
+    }: LoggerOptions & LevelLoggerOptions,
+        ...loggers: Array<Logger<MessageT, FormatT, Metadata>>
     ) {
         super({ name }, ...loggers);
         this.level = level;
@@ -37,33 +37,28 @@ export class LevelLogger<MessageT, FormatT> extends MetadataLogger<MessageT, For
         delete this.error;
 
         if (this.level == Level.BASE) {
-            this.base = (message: MessageT) => {
-                this.log(message, Level.BASE);
-            }
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            this.base = this.log.bind(this, Level.BASE);
         }
 
         if (this.level <= Level.DEBUG) {
-            this.debug = (message: MessageT) => {
-                this.log(message, Level.DEBUG);
-            }
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            this.debug = this.log.bind(this, Level.DEBUG);
         }
 
         if (this.level <= Level.INFO) {
-            this.info = (message: MessageT) => {
-                this.log(message, Level.INFO);
-            }
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            this.info = this.log.bind(this, Level.INFO);
         }
 
         if (this.level <= Level.WARN) {
-            this.warn = (message: MessageT) => {
-                this.log(message, Level.WARN);
-            }
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            this.warn = this.log.bind(this, Level.WARN);
         }
 
         if (this.level <= Level.ERROR) {
-            this.error = (message: MessageT) => {
-                this.log(message, Level.ERROR);
-            }
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            this.error = this.log.bind(this, Level.ERROR);
         }
     }
 

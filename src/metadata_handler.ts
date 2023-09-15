@@ -1,6 +1,5 @@
 
 import { Formatter } from "./abstract.js";
-import { Metadata } from "./metadata.js";
 
 export abstract class MetadataHandler<MessageT, FormatT, Metadata> {
 

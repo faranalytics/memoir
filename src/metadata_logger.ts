@@ -1,4 +1,5 @@
-import { Logger, LoggerOptions, Level, LevelHandler } from './abstract.js';
+import { Logger, LoggerOptions, Level } from './abstract.js';
+import { LevelHandler } from "./level_handler.js";
 import {Metadata} from './metadata.js';
 
 export class MetadataLogger<MessageT, FormatT> extends Logger<MessageT, FormatT, Metadata> {
@@ -10,12 +11,12 @@ export class MetadataLogger<MessageT, FormatT> extends Logger<MessageT, FormatT,
         this.log = this.log.bind(this);
     }
 
-    async log(message: MessageT, level: Level): Promise<void> {
+    async log(level: Level, message: MessageT): Promise<void> {
 
         try {
             for (let i = 0; i < this.handlers.length; i = i + 1) {
                 if (level >= this.handlers[i].level) {
-                    let meta = new Metadata(this.name, level);
+                    const meta = new Metadata(this.name, level);
                     await this.handlers[i].handle(message, meta);
                 }
             }

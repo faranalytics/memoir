@@ -1,5 +1,6 @@
 import { Metadata } from "./metadata.js";
-import { LevelHandler, Level } from "./abstract.js";
+import { Level } from "./abstract.js";
+import { LevelHandler } from "./level_handler.js";
 import { MetadataFormatter } from "./metadata_formatter.js";
 
 export class ConsoleHandler<MessageT, FormatT> extends LevelHandler<MessageT, FormatT, Metadata> {
@@ -9,8 +10,6 @@ export class ConsoleHandler<MessageT, FormatT> extends LevelHandler<MessageT, Fo
     constructor() {
         super();
         this.handle = this.handle.bind(this);
-        this.setFormatter = this.setFormatter.bind(this);
-        this.setLevel = this.setLevel.bind(this);
     }
 
     handle(message: MessageT, meta: Metadata): void {
@@ -19,7 +18,7 @@ export class ConsoleHandler<MessageT, FormatT> extends LevelHandler<MessageT, Fo
 
             if (this.formatter) {
 
-                let formattedMessage = this.formatter.format(message, meta);
+                const formattedMessage = this.formatter.format(message, meta);
 
                 if (Level[meta.level] == Level.ERROR) {
                     console.error(formattedMessage);

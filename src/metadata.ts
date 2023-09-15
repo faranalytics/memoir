@@ -13,9 +13,9 @@ export class Metadata {
         this.name = name;
         this.level = Level[level] as keyof typeof Level;
 
-        let error = new Error();
-        let match = error.stack?.match(/^([^\n]+?\n){4}\s+at(?: (?<func>[^\s]+) \(| )(?<url>[^\n]+):(?<line>\d+):(?<col>\d+)/is);
-        let groups = match?.groups;
+        const error = new Error();
+        const match = error.stack?.match(/^([^\n]+?\n){4}\s+at(?: (?<func>[^\s]+) \(| )(?<url>[^\n]+):(?<line>\d+):(?<col>\d+)/is);
+        const groups = match?.groups;
 
         if (groups) {
             this.func = groups['func'];

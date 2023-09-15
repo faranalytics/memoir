@@ -48,24 +48,24 @@ export abstract class Logger<MessageT, FormatT, MetadataT> {
         this.log = this.log.bind(this);
         this.addHandler = this.addHandler.bind(this);
 
-        for (let logger of loggers) {
+        for (const logger of loggers) {
             logger.handlers = [];
         }
     }
 
-    abstract log(message: MessageT, level: Level): void;
+    abstract log(level: Level, message: MessageT): void;
 
     addHandler(handler: Handler<MessageT, FormatT, MetadataT>) {
         this.handlers.push(handler);
 
-        for (let logger of this.loggers) {
+        for (const logger of this.loggers) {
             logger.addHandler(handler);
         }
     }
 
     removeHandler(handler: Handler<MessageT, FormatT, MetadataT>) {
-        let handlers = [];
-        for (let _handler of this.handlers) {
+        const handlers = [];
+        for (const _handler of this.handlers) {
             if (_handler != handler) {
                 handlers.push(_handler);
             }
@@ -73,17 +73,9 @@ export abstract class Logger<MessageT, FormatT, MetadataT> {
         this.handlers = handlers;
 
         if (this.loggers) {
-            for (let logger of this.loggers) {
+            for (const logger of this.loggers) {
                 logger.removeHandler(handler);
             }
         }
-    }
-}
-
-export abstract class LevelHandler<MessageT, FormatT, MetadataT> extends Handler<MessageT, FormatT, MetadataT> {
-    public level: number = Level.BASE;
-
-    setLevel(level: Level) {
-        this.level = level;
     }
 }

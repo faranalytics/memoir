@@ -68,7 +68,7 @@ The LevelLogger implementation is unique in that it is assigned a `Level` in its
 ### memoir.RotatingFileHandler(options)
 - options `FileHandlerOptions`
     - `path` `<string>`
-    - `rotations` `<0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10>` Option number of rotations.
+    - `rotations` `<0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10>` Optional number of rotations.
     - `bytes` `<number>` The size of the log file in MB. **Default**: `1e6`
     - `encoding` `<BufferEncoding>` **Default**: `utf8`
     - `mode` `<number>` **Default**: `0o666`

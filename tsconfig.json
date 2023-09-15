@@ -10,10 +10,11 @@
     "target": "es2022",
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
+    "skipLibCheck": false,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node16",
     "outDir": "./dist",
+    "rootDir": "./src",
     "declaration": true
   },
   "include": ["./src/**/*"]
