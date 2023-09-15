@@ -2,7 +2,7 @@
 
 Memoir is a type-checked asynchronous logging facility with a simple and familiar interface.  
 
-Memoir provides a framework for building custom `Logger`, `Handler`, or `Formatter` implementations.  Memoir also provides prebuilt implementations, such as Memoir's performance oriented `LevelLogger`.
+Memoir provides a framework for building custom `Logger`, `Handler`, and `Formatter` implementations.  Memoir also provides prebuilt implementations that can be used for everyday logging, such as Memoir's performance oriented `LevelLogger`.
 
 ## Table of Contents
 - [Install](#install)
