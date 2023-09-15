@@ -1,11 +1,8 @@
 import { Metadata } from "./metadata.js";
 import { Level } from "./abstract.js";
-import { LevelHandler } from "./level_handler.js";
-import { MetadataFormatter } from "./metadata_formatter.js";
+import { MetadataHandler } from "./metadata_handler.js";
 
-export class ConsoleHandler<MessageT, FormatT> extends LevelHandler<MessageT, FormatT, Metadata> {
-
-    protected formatter?: MetadataFormatter<MessageT, FormatT>;
+export class ConsoleHandler<MessageT, FormatT> extends MetadataHandler<MessageT, FormatT> {
 
     constructor() {
         super();

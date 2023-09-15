@@ -80,19 +80,18 @@ TypeScript will enforce the usage of the optional chaining operator when calling
 
 ## Examples
 ### ConsoleHandler Logger
-In this simple example you will create a `LevelLogger`.  The `LevelLogger`'s `Handler` will be set to log at the `DEBUG` Level; however, the `LevelLogger` level will be set to `INFO`, which will log `INFO`, `WARN`, and `ERROR` messages; hence, this ensures that frequent calls throughout the codebase to `log.debug` will never be evaluated.  This is achieved by using JavaScript's [Optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator.
+In this simple example you will create a `LevelLogger`.  The `LevelLogger`'s `Handler` will be set to log at the `DEBUG` Level; however, the `LevelLogger` level will be set to `INFO`, which will log `INFO`, `WARN`, and `ERROR` messages; hence, this ensures that frequent calls throughout the codebase to `log.debug` will never be evaluated.  This is achieved by using JavaScript's [optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator.
 #### Code
 ```ts
-let log = new LevelLogger<string, string>({ name: 'Console Handler Example 1', level: Level.INFO }); // Create an instance of a Logger.
-let consoleHandler = new ConsoleHandler<string, string>(); // Create an instance of a Handler.
-let formatter = new MetadataFormatter<string, string>(
-    // Pass a function to the constructor of the Formatter that will format the message and add metadata.
-    (message: string, { name, level, func, url, line, col }: Metadata): string =>
-        `${name}:${level}:${new Date().toISOString()}:${func}:${line}:${col}:${message}`
-); // Create an instance of a Formatter.
+const formatter = (message: string, { name, level, func, url, line, col }: Metadata): string =>
+    `${name}:${level}:${new Date().toISOString()}:${func}:${line}:${col}:${message}`;
+
+const log = new LevelLogger<string, string>({ name: 'Console Handler Example 1', level: Level.INFO }); // Create an instance of a Logger.
+const consoleHandler = new ConsoleHandler<string, string>(); // Create an instance of a Handler.
+const metadataFormatter = new MetadataFormatter<string, string>({ formatter }); // Create an instance of a Formatter.
 
 consoleHandler.setLevel(Level.DEBUG); // Set the Level of the Handler.
-consoleHandler.setFormatter(formatter); // Set the Formatter on the Handler.
+consoleHandler.setFormatter(metadataFormatter); // Set the Formatter on the Handler.
 log.addHandler(consoleHandler); // Add the Handler to the Logger.
 
 log.debug?.("Because the LevelLogger's `level` property is set to Level.INFO, this method is never called.");
@@ -111,16 +110,15 @@ Console Handler Example 1:DEBUG:2023-09-15T20:05:10.632Z:undefined:14:12:The Lev
 ### RotatingFileHandler Logger
 #### Code
 ```ts
-let log = new LevelLogger<string, string>({ name: 'Rotating File Handler Example', level: Level.INFO }); // Create an instance of a Logger.
-let fileHandler = new RotatingFileHandler({ path: './test.log', rotations: 5}); // Create an instance of a Handler.
-let formatter = new MetadataFormatter<string, string>(
-    // Pass a function to the constructor of the Formatter that will format the message and add metadata.
-    (message: string, { name, level, func, url, line, col }: Metadata): string =>
-        `${name}:${level}:${new Date().toISOString()}:${func}:${line}:${col}:${message}`
-); // Create an instance of a Formatter.
+const formatter = (message: string, { name, level, func, url, line, col }: Metadata): string =>
+    `${name}:${level}:${new Date().toISOString()}:${func}:${line}:${col}:${message}`;
+
+const log = new LevelLogger<string, string>({ name: 'Rotating File Handler Example', level: Level.INFO }); // Create an instance of a Logger.
+const fileHandler = new RotatingFileHandler({ path: './test.log', rotations: 5 }); // Create an instance of a Handler.
+const metadataFormatter = new MetadataFormatter<string, string>({ formatter }); // Create an instance of a Formatter.
 
 fileHandler.setLevel(Level.DEBUG); // Set the Level of the Handler.
-fileHandler.setFormatter(formatter); // Set the Formatter on the Handler.
+fileHandler.setFormatter(metadataFormatter); // Set the Formatter on the Handler.
 log.addHandler(fileHandler); // Add the Handler to the Logger.
 
 log.info?.('Hello World.'); // Log a Hello World to the console.

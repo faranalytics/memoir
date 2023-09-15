@@ -16,10 +16,7 @@ export class LevelLogger<MessageT, FormatT> extends MetadataLogger<MessageT, For
 
     private level: Level;
 
-    constructor({
-        name = '',
-        level = Level.BASE
-    }: LoggerOptions & LevelLoggerOptions,
+    constructor({ name = '', level = Level.BASE }: LoggerOptions & LevelLoggerOptions,
         ...loggers: Array<Logger<MessageT, FormatT, Metadata>>
     ) {
         super({ name }, ...loggers);

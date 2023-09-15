@@ -1,5 +1,10 @@
 import { Level } from './abstract.js';
 
+export interface MetadataOptions {
+    name: string;
+    level: Level;
+}
+
 export class Metadata {
     name: string;
     level: keyof typeof Level;
@@ -9,7 +14,7 @@ export class Metadata {
     line?: string;
     col?: string;
 
-    constructor(name: string, level: Level) {
+    constructor({ name, level }: MetadataOptions) {
         this.name = name;
         this.level = Level[level] as keyof typeof Level;
 

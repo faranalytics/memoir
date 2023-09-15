@@ -43,10 +43,11 @@ export abstract class Logger<MessageT, FormatT, MetadataT> {
     protected name: string;
 
     constructor(options: LoggerOptions, ...loggers: Array<Logger<MessageT, FormatT, MetadataT>>) {
-        this.loggers = loggers;
-        this.name = options.name;
         this.log = this.log.bind(this);
         this.addHandler = this.addHandler.bind(this);
+
+        this.loggers = loggers;
+        this.name = options.name;
 
         for (const logger of loggers) {
             logger.handlers = [];

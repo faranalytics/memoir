@@ -5,7 +5,7 @@ import { MetadataHandler } from './metadata_handler.js';
 import { Metadata } from './metadata.js';
 import { MetadataFormatter } from './metadata_formatter.js';
 
-interface FileHandlerOptions {
+export interface RotatingFileHandlerOptions {
     path: string;
     rotations?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
     bytes?: number;
@@ -25,7 +25,7 @@ export class RotatingFileHandler extends MetadataHandler<string, string> {
 
     private mutex: Promise<void> = Promise.resolve();
 
-    constructor({ path, rotations = 0, bytes = 10e6, encoding = 'utf8', mode = 0o666 }: FileHandlerOptions) {
+    constructor({ path, rotations = 0, bytes = 10e6, encoding = 'utf8', mode = 0o666 }: RotatingFileHandlerOptions) {
         super();
         this.handle = this.handle.bind(this);
         this.setFormatter = this.setFormatter.bind(this);

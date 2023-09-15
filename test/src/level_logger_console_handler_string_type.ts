@@ -1,16 +1,15 @@
 import { LevelLogger, ConsoleHandler, MetadataFormatter, Level, Metadata } from 'memoir';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const formatter = (message: string, { name, level, func, url, line, col }: Metadata): string =>
+    `${name}:${level}:${new Date().toISOString()}:${func}:${line}:${col}:${message}`;
+
 const log = new LevelLogger<string, string>({ name: 'Console Handler Example 1', level: Level.INFO }); // Create an instance of a Logger.
 const consoleHandler = new ConsoleHandler<string, string>(); // Create an instance of a Handler.
-const formatter = new MetadataFormatter<string, string>(
-    // Pass a function to the constructor of the Formatter that will format the message and add metadata.
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    (message: string, { name, level, func, url, line, col }: Metadata): string =>
-        `${name}:${level}:${new Date().toISOString()}:${func}:${line}:${col}:${message}`
-); // Create an instance of a Formatter.
+const metadataFormatter = new MetadataFormatter<string, string>({ formatter }); // Create an instance of a Formatter.
 
 consoleHandler.setLevel(Level.DEBUG); // Set the Level of the Handler.
-consoleHandler.setFormatter(formatter); // Set the Formatter on the Handler.
+consoleHandler.setFormatter(metadataFormatter); // Set the Formatter on the Handler.
 log.addHandler(consoleHandler); // Add the Handler to the Logger.
 
 log.debug?.("Because the LevelLogger's `level` property is set to Level.INFO, this method is never called.");

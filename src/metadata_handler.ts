@@ -1,8 +1,9 @@
 
-import { Formatter, Handler } from "./abstract.js";
+import { Formatter } from "./abstract.js";
+import { LevelHandler } from "./level_handler.js";
 import { Metadata } from "./metadata.js";
 
-export abstract class MetadataHandler<MessageT, FormatT> extends Handler<MessageT, FormatT, Metadata> {
+export abstract class MetadataHandler<MessageT, FormatT> extends LevelHandler<MessageT, FormatT, Metadata> {
 
     protected formatter?: Formatter<MessageT, FormatT, Metadata>;
 
