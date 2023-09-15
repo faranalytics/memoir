@@ -54,7 +54,7 @@ The `Metadata` object is passed to a `Formatter` that supports it.
 `levelLogger.addHandler(handler)`
 - `handler` `memoir.MetadataHandler` A Memoir `Handler` that supports a `Metadata` argument.
 
-> The LevelLogger implementation is unique in that it may be assigned a `Level` in its constuctor or a `Level` is set using its `setLevel` method.  The `LevelLogger` will configure its interface according to the log `Level` it is set to.  JavaScript's [optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator can be used in order to only log messages that meet the specified `Level` constraint.  This strategy is aimed at improving performance.
+> The LevelLogger implementation is unique in that it may be assigned a `Level` in its constuctor or a `Level` may be set using its `setLevel` method.  The `LevelLogger` will configure its interface according to the log `Level`.  JavaScript's [optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator can be used in order to only log messages that meet the specified `Level` constraint.  This strategy is aimed at improving performance.
 
 ### memoir.MetadataHandler<MessageT, FormatT>()
 - Extends: <memoir.Handler>
@@ -74,7 +74,7 @@ The `Metadata` object is passed to a `Formatter` that supports it.
     - `mode` `<number>` **Default**: `0o666`
 
 ## Performant Logging
-Memoir provides a performant `Logger` class named `LevelLogger` that implements a familiar logging interface.  `LevelLogger` may implement any of the common logging methods: `base`, `debug`, `info`, `warn`, and `error`.  The `LevelLogger` is unique in that it dynamically configures its interface to only implement the methods that are relevant for the specified logging `Level` that is passed to its constructor or set using its `setLevel` method.  This approach allows the programmer to take advantage of JavaScript's [optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator in order to eliminate unecessary calls to the `Logger` and its `Handlers`.  Practically, it ensures that frequent calls to `LevelLogger.debug` are not evaluated unless the `LevelLogger` has been expressly configured to the `DEBUG` `Level`.
+Memoir provides a performant `Logger` class named `LevelLogger` that implements a dynamic logging interface.  `LevelLogger` may implement any of the common logging methods: `base`, `debug`, `info`, `warn`, and `error`.  The `LevelLogger` dynamically configures its interface to only implement the methods that are relevant for the specified logging `Level` that is passed to its constructor or set using its `setLevel` method.  This approach allows the programmer to take advantage of JavaScript's [optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator in order to eliminate unecessary calls to the `Logger` and its `Handlers`.  Practically, it ensures that frequent calls to `LevelLogger.debug` are not evaluated unless the `LevelLogger` has been expressly configured to the `DEBUG` `Level`.
 
 TypeScript will enforce the usage of the optional chaining operator when calling `LevelLogger`'s methods. Please see the examples for how to use the `LevelLogger` interface.
 
@@ -113,7 +113,7 @@ Console Handler Example 1:DEBUG:2023-09-15T20:05:10.632Z:undefined:14:12:The Lev
 const formatter = (message: string, { name, level, func, url, line, col }: Metadata): string =>
     `${name}:${level}:${new Date().toISOString()}:${func}:${line}:${col}:${message}`;
 
-const log = new LevelLogger<string, string>({ name: 'Rotating File Handler Example', level: Level.INFO }); // Create an instance of a Logger.
+const log = new LevelLogger<string, string>({ name: 'Rotating File Handler Example' }); // Create an instance of a Logger.
 const fileHandler = new RotatingFileHandler({ path: './test.log', rotations: 5 }); // Create an instance of a Handler.
 const metadataFormatter = new MetadataFormatter<string, string>({ formatter }); // Create an instance of a Formatter.
 

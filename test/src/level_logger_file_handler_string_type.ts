@@ -4,7 +4,7 @@ import { LevelLogger, MetadataFormatter, Level, Metadata, RotatingFileHandler } 
 const formatter = (message: string, { name, level, func, url, line, col }: Metadata): string =>
     `${name}:${level}:${new Date().toISOString()}:${func}:${line}:${col}:${message}`;
 
-const log = new LevelLogger<string, string>({ name: 'Rotating File Handler Example', level: Level.INFO }); // Create an instance of a Logger.
+const log = new LevelLogger<string, string>({ name: 'Rotating File Handler Example' }); // Create an instance of a Logger.
 const fileHandler = new RotatingFileHandler({ path: './test.log', rotations: 5 }); // Create an instance of a Handler.
 const metadataFormatter = new MetadataFormatter<string, string>({ formatter }); // Create an instance of a Formatter.
 
