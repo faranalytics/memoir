@@ -1,17 +1,17 @@
 
 import { BaseFormatter } from "./abstract.js";
-import { Meta, IMeta } from "./meta.js";
+import { Metadata, IMetadata } from "./meta.js";
 
-export class MetaFormatter<MessageT, FormatT> extends BaseFormatter<MessageT, FormatT, Meta> {
+export class MetadataFormatter<MessageT, FormatT> extends BaseFormatter<MessageT, FormatT, Metadata> {
 
-    private formatter: (message: MessageT, meta: IMeta) => FormatT;
+    private formatter: (message: MessageT, meta: IMetadata) => FormatT;
 
-    constructor(formatter: (message: MessageT, meta: IMeta) => FormatT) {
+    constructor(formatter: (message: MessageT, meta: IMetadata) => FormatT) {
         super();
         this.formatter = formatter;
     }
 
-    format(message: MessageT, meta: IMeta): FormatT {
+    format(message: MessageT, meta: IMetadata): FormatT {
         return this.formatter(message, meta);
     }
 }

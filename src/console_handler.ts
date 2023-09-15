@@ -1,9 +1,9 @@
-import { Meta } from "./meta.js";
+import { Metadata } from "./meta.js";
 import { LevelHandler, BaseFormatter, Level } from "./abstract.js";
 
-export class ConsoleHandler<MessageT, FormatT> extends LevelHandler<MessageT, FormatT, Meta> {
+export class ConsoleHandler<MessageT, FormatT> extends LevelHandler<MessageT, FormatT, Metadata> {
 
-    protected formatter?: BaseFormatter<MessageT, FormatT, Meta>;
+    protected formatter?: BaseFormatter<MessageT, FormatT, Metadata>;
 
     constructor() {
         super();
@@ -12,14 +12,15 @@ export class ConsoleHandler<MessageT, FormatT> extends LevelHandler<MessageT, Fo
         this.setLevel = this.setLevel.bind(this);
     }
 
-    handle(message: MessageT, meta: Meta): void {
-        if (meta.level && meta.level >= this.level) {
+    handle(message: MessageT, meta: Metadata): void {
+        let test = Level['DEBUG'];
+        if (meta.level && Level[meta.level] >= this.level) {
 
             if (this.formatter) {
 
                 let formattedMessage = this.formatter.format(message, meta);
 
-                if (meta.level == Level.ERROR) {
+                if (Level[meta.level] == Level.ERROR) {
                     console.error(formattedMessage);
                 }
                 else {

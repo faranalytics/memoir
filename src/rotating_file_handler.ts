@@ -1,7 +1,7 @@
 import * as pth from 'node:path';
 import * as fs from 'node:fs/promises';
 import {Level, BaseHandler, BaseFormatter} from './abstract.js';
-import {Meta} from './meta.js';
+import {Metadata} from './meta.js';
 
 interface FileHandlerOptions {
     path: string;
@@ -11,7 +11,7 @@ interface FileHandlerOptions {
     mode?: number;
 }
 
-export class RotatingFileHandler extends BaseHandler<string, string, Meta> {
+export class RotatingFileHandler extends BaseHandler<string, string, Metadata> {
 
     private path: string;
     private rotations: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
@@ -20,7 +20,7 @@ export class RotatingFileHandler extends BaseHandler<string, string, Meta> {
     private mode: number;
 
     public level: number = Level.BASE;
-    protected formatter?: BaseFormatter<string, string, Meta>;
+    protected formatter?: BaseFormatter<string, string, Metadata>;
 
     private mutex: Promise<any> = Promise.resolve();
 
@@ -37,9 +37,9 @@ export class RotatingFileHandler extends BaseHandler<string, string, Meta> {
         this.mode = mode;
     }
 
-    async handle(message: string, meta: Meta) {
+    async handle(message: string, meta: Metadata) {
 
-        if (meta.level >= this.level) {
+        if (Level[meta.level] >= this.level) {
 
             if (this.formatter) {
                 message = this.formatter.format(message, meta);
@@ -86,7 +86,7 @@ export class RotatingFileHandler extends BaseHandler<string, string, Meta> {
         }
     }
 
-    setFormatter(formatter: BaseFormatter<string, string, Meta>) {
+    setFormatter(formatter: BaseFormatter<string, string, Metadata>) {
         this.formatter = formatter;
     }
 

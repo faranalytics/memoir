@@ -6,7 +6,7 @@ let log = new LevelLogger<string, string>({ 'name': 'example 1' });
 // Create an instance of a Handler.
 let consoleHandler = new ConsoleHandler<string, string>();
 
-let fileHandler = new RotatingFileHandler({ path: './test/test.log', rotations: 5, bytes: 10e3 });
+let fileHandler = new RotatingFileHandler({ path: './test.log', rotations: 5, bytes: 10e3 });
 
 // Set the Level of the handler.
 consoleHandler.setLevel(Level.DEBUG);
@@ -30,11 +30,8 @@ log.addHandler(fileHandler);
 log.info('Hello World.');
 //  INFO:2022-12-30T00:22:05.981Z:undefined:26:5:Hello World.
 
-for (let i = 0; i < 1e1; i++) {
-    (function test() { log.info('Hello World.'); }());
-}
+(function test() { log.info('Hello World.'); }());
 // INFO:2022-12-30T00:22:43.073Z:test:28:24:Hello World.
-
 
 let objectLogger = new LevelLogger<object, string>({ name: 'example 2' });
 let objectHandler = new ConsoleHandler<object, string>();

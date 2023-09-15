@@ -1,17 +1,17 @@
 import { Level } from './abstract.js';
 
-export interface IMeta {
+export interface IMetadata {
     name: string;
-    level: number;
+    level: keyof typeof Level;
     func?: string;
     url?: string;
     line?: string;
     col?: string;
 }
 
-export class Meta implements IMeta {
+export class Metadata implements IMetadata {
     name: string;
-    level: number;
+    level: keyof typeof Level;
     error?: Error;
     func?: string;
     url?: string;
@@ -20,12 +20,10 @@ export class Meta implements IMeta {
 
     constructor(name: string, level: Level) {
         this.name = name;
-        this.level = level;
+        this.level = Level[level] as keyof typeof Level;
 
         let error = new Error();
-
-        let match = error.stack?.match(/^([^\n]+?\n){3}\s+at(?: (?<func>[^\s]+) \(| )(?<url>[^\n]+):(?<line>\d+):(?<col>\d+)/is);
-
+        let match = error.stack?.match(/^([^\n]+?\n){4}\s+at(?: (?<func>[^\s]+) \(| )(?<url>[^\n]+):(?<line>\d+):(?<col>\d+)/is);
         let groups = match?.groups;
 
         if (groups) {

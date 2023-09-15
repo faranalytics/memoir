@@ -8,6 +8,7 @@
 !/test
 !/test/package.json
 !/test/tsconfig.json
+!/test/nodemon.json
 !/test/src
 !/test/src/*
 !/*.*

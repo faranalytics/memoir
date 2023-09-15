@@ -7,27 +7,27 @@ export enum Level {
     ERROR = 10e4
 }
 
-export abstract class BaseFormatter<MessageT, FormatT, MetaT> {
+export abstract class BaseFormatter<MessageT, FormatT, MetadataT> {
 
     constructor() {
         this.format = this.format.bind(this);
     }
-    
-    abstract format(message: MessageT, meta: MetaT): FormatT;
+
+    abstract format(message: MessageT, meta: MetadataT): FormatT;
 }
 
-export abstract class BaseHandler<MessageT, FormatT, MetaT> {
+export abstract class BaseHandler<MessageT, FormatT, MetadataT> {
 
-    protected abstract formatter?: BaseFormatter<MessageT, FormatT, MetaT>;
+    protected abstract formatter?: BaseFormatter<MessageT, FormatT, MetadataT>;
 
     constructor() {
         this.handle = this.handle.bind(this);
         this.setFormatter = this.setFormatter.bind(this);
     }
 
-    public abstract handle(message: MessageT, meta: MetaT): Promise<void> | void;
+    public abstract handle(message: MessageT, meta: MetadataT): Promise<void> | void;
 
-    setFormatter(formatter: BaseFormatter<MessageT, FormatT, MetaT>) {
+    setFormatter(formatter: BaseFormatter<MessageT, FormatT, MetadataT>) {
         this.formatter = formatter;
     }
 }
@@ -36,13 +36,13 @@ export interface BaseLoggerOptions {
     name: string;
 }
 
-export abstract class BaseLogger<MessageT, FormatT, MetaT> {
+export abstract class BaseLogger<MessageT, FormatT, MetadataT> {
 
-    public handlers: Array<BaseHandler<MessageT, FormatT, MetaT>> = [];
-    protected loggers: Array<BaseLogger<MessageT, FormatT, MetaT>>;
+    public handlers: Array<BaseHandler<MessageT, FormatT, MetadataT>> = [];
+    protected loggers: Array<BaseLogger<MessageT, FormatT, MetadataT>>;
     protected name: string;
-    
-    constructor(options: BaseLoggerOptions, ...loggers: Array<BaseLogger<MessageT, FormatT, MetaT>>) {
+
+    constructor(options: BaseLoggerOptions, ...loggers: Array<BaseLogger<MessageT, FormatT, MetadataT>>) {
         this.loggers = loggers;
         this.name = options.name;
         this.log = this.log.bind(this);
@@ -53,19 +53,17 @@ export abstract class BaseLogger<MessageT, FormatT, MetaT> {
         }
     }
 
-    abstract log(message: MessageT, meta: MetaT): void;
+    abstract log(message: MessageT, level: Level): void;
 
-    addHandler(handler: BaseHandler<MessageT, FormatT, MetaT>) {
+    addHandler(handler: BaseHandler<MessageT, FormatT, MetadataT>) {
         this.handlers.push(handler);
 
-        if (this.loggers) {
-            for (let logger of this.loggers) {
-                logger.addHandler(handler);
-            }
+        for (let logger of this.loggers) {
+            logger.addHandler(handler);
         }
     }
 
-    removeHandler(handler: BaseHandler<MessageT, FormatT, MetaT>) {
+    removeHandler(handler: BaseHandler<MessageT, FormatT, MetadataT>) {
         let handlers = [];
         for (let _handler of this.handlers) {
             if (_handler != handler) {
@@ -82,7 +80,7 @@ export abstract class BaseLogger<MessageT, FormatT, MetaT> {
     }
 }
 
-export abstract class LevelHandler<MessageT, FormatT, MetaT> extends BaseHandler<MessageT, FormatT, MetaT> {
+export abstract class LevelHandler<MessageT, FormatT, MetadataT> extends BaseHandler<MessageT, FormatT, MetadataT> {
     public level: number = Level.BASE;
 
     setLevel(level: Level) {
