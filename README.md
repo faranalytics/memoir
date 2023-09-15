@@ -1,79 +1,66 @@
 # Memoir
 
-Memoir is a type-checked asynchronous logging facility with a simple and familiar interface.
+Memoir is a type-checked asynchronous logging facility with a simple and familiar interface.  
+
+Memoir's `LevelLogger`, as of version 2.0, implements performant logging by taking advantage of JavaScript's [Optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator.  Please see the examples for how to use the `LevelLogger` interface.
+
+## Table of Contents
+- [Install](#install)
+- [Performant Logging](#performant-logging)
+- [Examples](#examples)
+  - [Console Logger](#console-logger)
+  - [FileHandler Logger](#filehandler-logger)
 
 ## Install
-
 ```
 npm install memoir
 ```
+## Performant Logging
+Memoir achieves performant logging by taking advantage of JavaScript's [Optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator.  For example, if we only want for log messages at Level `INFO`, `WARN`, or `ERROR` to be logged, we do not want calls to `log.debug` to be evaluated.  By using the Optional chaining operator when calling the LevelLogger's methods this can be achieved.
 
-## Usage
+TypeScript will enforce the usage of the Optional chaining operator when calling LevelLogger's methods.
 
+## Examples
+### Console Logger
+In this simple example you will create a LevelLogger.  The LevelLogger's Handler will be set to log at the DEBUG Level; however, the LevelLogger itself will be configured to only permit method calls at Levels INFO, WARN, or ERROR.  This ensures that calls to `log.debug` will never be evaluated.
 ```ts
-import { LevelLogger, ConsoleHandler, MetaFormatter, Level, IMeta, RotatingFileHandler } from 'memoir';
-
-// Create an instance of a Logger.
-let log = new LevelLogger<string, string>({ 'name': 'example 1' });
-
-// Create an instance of a Handler.
-let consoleHandler = new ConsoleHandler<string, string>();
-
-let fileHandler = new RotatingFileHandler({ path: './test/test.log', rotations: 5, bytes: 10e3 });
-
-// Set the Level of the handler.
-consoleHandler.setLevel(Level.DEBUG);
-
+let log = new LevelLogger<string, string>({ 'name': 'example 1' , level:Level.INFO}); // Create an instance of a Logger.
+let consoleHandler = new ConsoleHandler<string, string>(); // Create an instance of a Handler.
+consoleHandler.setLevel(Level.DEBUG); // Set the Level of the handler.
 // Create an instance of a Formatter.
 // Pass a function to the constructor of the Formatter that will format the message and add metadata.
-let formatter = new MetaFormatter<string, string>(
-    (message: string, { name, level, func, url, line, col }: IMeta): string =>
+let formatter = new MetadataFormatter<string, string>(
+    (message: string, { name, level, func, url, line, col }: IMetadata): string =>
         `${name}:${level}:${new Date().toISOString()}:${func}:${line}:${col}:${message}`
 );
+consoleHandler.setFormatter(formatter); // Set the Formatter on the Handler.
+log.addHandler(consoleHandler); // Add the Handler to the Logger.
 
-// Set the Formatter on the Handler.
-consoleHandler.setFormatter(formatter);
-fileHandler.setFormatter(formatter);
+log.debug?.('Because the `level` is set to Level.INFO, this method is never called.');
+log.info?.('Hello World.'); // Log a Hello World to the console.
+(function test() { log.info?.('Hello World.'); }());
+log.setLevel(Level.DEBUG);
+log.debug?.('Now the `level` has been set to Level.DEBUG; hence, this method is called.');
 
-// Add the Handler to the Logger.
-log.addHandler(consoleHandler);
-log.addHandler(fileHandler);
+/*Output:
+example 1:INFO:2023-09-15T04:23:20.088Z:undefined:11:11:Hello World.
+example 1:INFO:2023-09-15T04:23:20.095Z:test:13:30:Hello World.
+example 1:DEBUG:2023-09-15T04:23:20.095Z:undefined:16:12:Now the `level` has been set to Level.DEBUG; hence, this method is called.
+*/
+```
 
-// Log a message.
-log.info('Hello World.');
-//  INFO:2022-12-30T00:22:05.981Z:undefined:26:5:Hello World.
-
-for (let i = 0; i < 1e1; i++) {
-    (function test() { log.info('Hello World.'); }());
-}
-// INFO:2022-12-30T00:22:43.073Z:test:28:24:Hello World.
-
-
-let objectLogger = new LevelLogger<object, string>({ name: 'example 2' });
-let objectHandler = new ConsoleHandler<object, string>();
-let objectFormatter = new MetaFormatter<object, string>((objMessage: object, { name, level, func, url, line, col }: IMeta) =>
-    `${name}:${level}:${new Date().toISOString()}:${func}:${line}:${col}:${JSON.stringify(objMessage)}`
-);
-
-objectHandler.setFormatter(objectFormatter);
-
-objectLogger.addHandler(objectHandler);
-
-objectLogger.info({ 'greeting': 'Hello World.' });
-// INFO:2022-12-30T00:21:13.664Z:undefined:33:14:{"greeting":"Hello World."}
-
-(function test() { objectLogger.info({ 'greeting': 'Hello World.' }); }());
-// INFO:2022-12-30T00:24:05.680Z:test:38:33:{"greeting":"Hello World."}
+### FileHandler Logger
+```ts
 
 ```
 
-## The Meta Object.
+## The Metadata Object.
 
 The formatter function passed to the constructor of the MetaFormatter can have the type:
 
-`(formatter: (message: MessageT, meta: Meta) => FormatT`
+`(formatter: (message: MessageT, meta: Metadata) => FormatT`
 
-The interface to the meta object contains the properties:
+The Metadata object contains the properties:
 * name: the name of the Logger.
 * level: the Level, 
 * func: the name of the function, 
@@ -81,28 +68,7 @@ The interface to the meta object contains the properties:
 * line: the line number,
 * col: the column number. 
 
-## How to construct a custom type-checked logger.
 
-This logger will log a JavaScript *object* to the console as a JSON *string*.  The formatter will add the Logger Name, Date, function, line number, and column number to the log message.
-
-```ts
-let objectLogger = new LevelLogger<object, string>();
-let objectHandler = new ConsoleHandler<object, string>();
-let objectFormatter = new Formatter<object, string>(
-    (objMessage, { level, func, url, line, col }) => 
-    `${name}:${level}:${new Date().toISOString()}:${func}:${line}:${col}:${JSON.stringify(objMessage)}`
-    );
-
-objectHandler.setFormatter(objectFormatter);
-
-objectLogger.addHandler(objectHandler);
-
-objectLogger.info({'greeting':'Hello World.'}); 
-//  INFO:2022-12-30T00:21:13.664Z:undefined:33:14:{"greeting":"Hello World."}
-
-(function test(){objectLogger.info({'greeting':'Hello World.'});}());
-//  INFO:2022-12-30T00:24:05.680Z:test:38:33:{"greeting":"Hello World."}
-```
 
 ## How to build a custom type-checked Handler.
 
