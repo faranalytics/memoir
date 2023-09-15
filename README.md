@@ -11,7 +11,8 @@ Memoir provides a framework for building custom `Logger`, `Handler`, or `Formatt
 - [Examples](#examples)
   - [Console Logger](#console-logger)
   - [FileHandler Logger](#filehandler-logger)
-
+- [How To]
+    - [How to build a type-checked custom Memoir Handler.]
 ## Install
 ```bash
 npm install memoir
@@ -72,13 +73,13 @@ The LevelLogger implementation is unique in that it is assigned a `Level` in its
     - `mode` `<number>` **Default**: `0o666`
 
 ## Performant Logging
-Memoir provides a performant `Logger` class named `LevelLogger` that implements a familiar logging interface.  `LevelLogger` may implement any of common logging methods: `base`, `debug`, `info`, `warn`, and `error`.  The `LevelLogger` is unique in that it dynamically configures its interface to only implement the methods that are relevant for the specified logging `Level` that is passed to its constructor or set using its `setLevel` method.  This approach allows the programmer to take advantage of JavaScript's [optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator in order to eliminate unecessary calls to the `Logger` and its `Handlers`.  Practically, it ensures that frequent calls to `LevelLogger.debug` are not evaluated unless the `LevelLogger` has been expressly configured to the `DEBUG` `Level`.
+Memoir provides a performant `Logger` class named `LevelLogger` that implements a familiar logging interface.  `LevelLogger` may implement any of the common logging methods: `base`, `debug`, `info`, `warn`, and `error`.  The `LevelLogger` is unique in that it dynamically configures its interface to only implement the methods that are relevant for the specified logging `Level` that is passed to its constructor or set using its `setLevel` method.  This approach allows the programmer to take advantage of JavaScript's [optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator in order to eliminate unecessary calls to the `Logger` and its `Handlers`.  Practically, it ensures that frequent calls to `LevelLogger.debug` are not evaluated unless the `LevelLogger` has been expressly configured to the `DEBUG` `Level`.
 
 TypeScript will enforce the usage of the optional chaining operator when calling `LevelLogger`'s methods. Please see the examples for how to use the `LevelLogger` interface.
 
 ## Examples
 ### Console Logger
-In this simple example you will create a `LevelLogger`.  The `LevelLogger`'s `Handler` will be set to log at the `DEBUG` Level; however, the `LevelLogger` level will be set to `INFO`, which will log `INFO`, `WARN`, and `ERROR`; hence, this ensures that more frequent calls throughout the codebase to `log.debug` will never be evaluated.  This is achieved by using JavaScript's [Optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator.
+In this simple example you will create a `LevelLogger`.  The `LevelLogger`'s `Handler` will be set to log at the `DEBUG` Level; however, the `LevelLogger` level will be set to `INFO`, which will log `INFO`, `WARN`, and `ERROR` messages; hence, this ensures that frequent calls throughout the codebase to `log.debug` will never be evaluated.  This is achieved by using JavaScript's [Optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator.
 #### Code
 ```ts
 let log = new LevelLogger<string, string>({ name: 'Console Handler Example 1', level: Level.INFO }); // Create an instance of a Logger.
@@ -129,3 +130,7 @@ log.info?.('Hello World.'); // Log a Hello World to the console.
 Rotating File Handler Example:INFO:2023-09-15T20:03:45.657Z:undefined:10:11:Hello World.
 Rotating File Handler Example:INFO:2023-09-15T20:03:45.657Z:test:11:30:Hello World.
 ```
+## How To
+
+### How to build a type-checked custom Memoir Handler.
+Please see the examples in `./src/console_handler.ts` and `./src/rotating_file_handler.ts` for practical examples that demonstrate how to subclass the base classes in order to build a custom Memoir Handler.
