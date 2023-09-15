@@ -18,7 +18,7 @@ npm install memoir
 ```
 
 ## Concepts
-Memoir implements concepts that are familiar in the logging domain i.e., `Level`s, `Logger`s, `Handler`s, and `Formatter`s.  In addition to these familiar concepts, Memoir features a `Metadata` object that contains information about the logged message. It is passed to `Formatter`'s that support it.  
+Memoir implements concepts that are familiar in the logging domain i.e., `Levels`, `Loggers`, `Handlers`, and `Formatters`.  In addition to these familiar concepts, Memoir features a `Metadata` object that contains information about the logged message (e.g., the name of the function). It is passed to `Formatters` that support it.  
 
 The following concepts are a subset of Memoir classes that are of practical use.  These concepts are used in the provided [`Examples`](#examples).
 
@@ -62,6 +62,14 @@ The LevelLogger implementation is unique in that it is assigned a `Level` in its
 ### memoir.MetadataFormatter<MessageT, FormatT>(formatter)
 - Extends: <memoir.Formatter>
 - `formatter` `(message: MessageT, meta: Metadata) => FormatT` A function that will return the formatted message of type `FormatT`.
+
+### memoir.RotatingFileHandler(options)
+- options `FileHandlerOptions`
+    - `path` `<string>`
+    - `rotations` `<0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10>` Option number of rotations.
+    - `bytes` `<number>` The size of the log file in MB. **Default**: `1e6`
+    - `encoding` `<BufferEncoding>` **Default**: `utf8`
+    - `mode` `<number>` **Default**: `0o666`
 
 ## Performant Logging
 >> Memoir provides a performant `Logger` class named `LevelLogger` that implements a familiar logging interface.  `LevelLogger` may implement any of common logging methods: `base`, `debug`, `info`, `warn`, and `error`.  The `LevelLogger` is unique in that it dynamically configures itself to only implement the methods that are relevant for the specified logging `Level` that is passed to its constructor or set using its `setLevel` method.  This approach allows the programmer to take advantage of JavaScript's [optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator in order to eliminate unecessary calls to the `Logger` and its `Handlers`.  Practically, it ensures that frequent calls to `LevelLogger.debug` are not evaluated unless the `LevelLogger` has been configured to the `DEBUG` `Level`.
