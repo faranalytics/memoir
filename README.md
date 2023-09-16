@@ -31,7 +31,7 @@ The following concepts are a subset of Memoir classes that are of practical use.
     - `INFO` `<string>`
     - `WARN` `<string>`
     - `ERROR` `<string>`
-- Returns: `<number>`
+- Returns: `Level`
 
 ### memoir.Metadata
 - `name` `<string>` The name of the `Logger`.
@@ -46,7 +46,7 @@ The `Metadata` object is passed to a `Formatter` that supports it.
 - Extends: <memoir.MetadataLogger>
 - options `<LoggerOptions & LevelLoggerOptions>`
     - `name` `<string>` Optional string that names the Logger.
-    - `level` `<memoir.Level>` Optional `Level` that indicates which methods the `Logger` will implement for logging.
+    - `level` `<memoir.Level>` Optional `Level` that indicates which methods the `Logger` will implement for logging. **Default**: `Level.BASE`
 
 `levelLogger.setLevel(level)`
 - `level` `<memoir.Level>` A `Level` that indicates which methods the `Logger` will implement for logging. 
