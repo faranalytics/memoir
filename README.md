@@ -40,7 +40,7 @@ The following concepts are a subset of Memoir classes that are of practical use.
 - `line` `<string>` The line number where the `Logger` method was called.
 - `col` `<string>` The column number where the `Logger` method was called.
 
-The `Metadata` object is passed to a `Formatter` that supports it.
+The `Metadata` object may be passed to a `Formatter` that supports it.
 
 ### memoir.LevelLogger<MessageT, FormatT>(options)
 - Extends: <memoir.MetadataLogger>
