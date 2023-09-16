@@ -31,7 +31,6 @@ The following concepts are a subset of Memoir classes that are of practical use.
     - `INFO` `<string>`
     - `WARN` `<string>`
     - `ERROR` `<string>`
-- Returns: `Level`
 
 ### memoir.Metadata
 - `name` `<string>` The name of the `Logger`.
@@ -43,7 +42,7 @@ The following concepts are a subset of Memoir classes that are of practical use.
 The `Metadata` object may be passed to a `Formatter` that supports it.
 
 ### memoir.LevelLogger<MessageT, FormatT>(options)
-- Extends: <memoir.MetadataLogger>
+- Extends: `<memoir.MetadataLogger>`
 - options `<LoggerOptions & LevelLoggerOptions>`
     - `name` `<string>` Optional string that names the Logger.
     - `level` `<memoir.Level>` Optional `Level` that indicates which methods the `Logger` will implement for logging. **Default**: `Level.BASE`
@@ -57,16 +56,16 @@ The `Metadata` object may be passed to a `Formatter` that supports it.
 > The LevelLogger implementation is unique in that it may be assigned a `Level` in its constructor or a `Level` may be set using its `setLevel` method.  The `LevelLogger` will configure its interface according to the log `Level`.  JavaScript's [optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator can be used in order to only log messages that meet the specified `Level` constraint.  This strategy is aimed at improving performance.
 
 ### memoir.MetadataHandler<MessageT, FormatT>()
-- Extends: <memoir.Handler>
+- Extends: `<memoir.Handler>`
 `handler.setFormatter(formatter: Formatter)`
 - `formatter` `<memoir.formatter>` A memoir `Formatter`. 
 
 ### memoir.MetadataFormatter<MessageT, FormatT>(formatter)
-- Extends: <memoir.Formatter>
+- Extends: `<memoir.Formatter>`
 - `formatter` `(message: MessageT, meta: Metadata) => FormatT` A function that will return the formatted message of type `FormatT`.
 
 ### memoir.RotatingFileHandler(options)
-- options `FileHandlerOptions`
+- options `<FileHandlerOptions>`
     - `path` `<string>`
     - `rotations` `<0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10>` Optional number of rotations.
     - `bytes` `<number>` The size of the log file in MB. **Default**: `1e6`
