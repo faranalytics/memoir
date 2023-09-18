@@ -17,9 +17,9 @@ export class MetadataLogger<MessageT, FormatT> extends Logger<MessageT, FormatT,
     async log(level: Level, message: MessageT): Promise<void> {
 
         try {
+            const meta = new Metadata({ name: this.name, level });
             for (let i = 0; i < this.handlers.length; i = i + 1) {
                 if (level >= this.handlers[i].level) {
-                    const meta = new Metadata({name: this.name, level});
                     await this.handlers[i].handle(message, meta);
                 }
             }

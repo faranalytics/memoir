@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.0.1] - 2023-09-18
+### Fixed
+- Fix bug in instantiation of Metadata. 
+
 ## [2.0.0] - 2023-09-15
 ### Added
 - CHANGELOG.md

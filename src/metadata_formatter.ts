@@ -1,6 +1,6 @@
 
 import { Formatter } from "./abstract.js";
-import { Metadata} from "./metadata.js";
+import { Metadata } from "./metadata.js";
 
 export interface MetadataFormatterOptions<MessageT, FormatT> {
     formatter: (message: MessageT, meta: Metadata) => FormatT;
@@ -10,7 +10,7 @@ export class MetadataFormatter<MessageT, FormatT> extends Formatter<MessageT, Fo
 
     private formatter: (message: MessageT, meta: Metadata) => FormatT;
 
-    constructor({formatter}: MetadataFormatterOptions<MessageT, FormatT>) {
+    constructor({ formatter }: MetadataFormatterOptions<MessageT, FormatT>) {
         super();
         this.formatter = formatter;
     }
