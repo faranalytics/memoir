@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.0.1] - 2023-09-18
+## [2.0.3] - 2023-09-18
 ### Fixed
 - Fix bug in instantiation of Metadata. 
 
