@@ -4,9 +4,8 @@
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
-    "build:dist": "tsc --build .",
-    "build": "npm run build:dist",
-    "clean": "rm -rf ./dist/*",
+    "build": "tsc",
+    "clean": "rm -rf ./dist/* && rm ./test.log",
     "clean:build": "npm run clean && npm run build",
     "monitor": "nodemon ."
   },
