@@ -73,7 +73,9 @@ The `Metadata` object may be passed to a `Formatter` that supports it.
     - `mode` `<number>` **Default**: `0o666`
 
 ## Performant Logging
-Memoir provides a performant `Logger` class named `LevelLogger` that implements a dynamic logging interface.  `LevelLogger` may implement any of the common logging methods: `base`, `debug`, `info`, `warn`, and `error`.  The `LevelLogger` dynamically configures its interface to only implement the methods that are relevant for the specified logging `Level` that is passed to its constructor or set using its `setLevel` method.  This approach allows the programmer to take advantage of JavaScript's [optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator in order to eliminate unnecessary calls to the `Logger` and its `Handlers`.  Practically, it ensures that frequent calls to `LevelLogger.debug` are not evaluated unless the `LevelLogger` has been expressly configured to the `DEBUG` `Level`.
+Memoir provides a performant `Logger` class named `LevelLogger` that implements a dynamic logging interface.  `LevelLogger` may implement any of the common logging methods: `base`, `debug`, `info`, `warn`, and `error`.  The `LevelLogger` dynamically configures its interface to only implement the methods that are relevant for the specified logging `Level` that is passed to its constructor or set using its `setLevel` method.  This approach allows the programmer to take advantage of JavaScript's [optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator in order to eliminate unnecessary calls to the `Logger` and its `Handlers`.  
+
+Practically, it ensures that frequent calls to `LevelLogger.debug` are not evaluated unless the `LevelLogger` has been expressly configured to the `DEBUG` `Level`.
 
 TypeScript will enforce the usage of the optional chaining operator when calling `LevelLogger`'s methods. Please see the examples for how to use the `LevelLogger` interface.
 
