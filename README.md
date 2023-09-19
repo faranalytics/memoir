@@ -51,7 +51,7 @@ The `Metadata` object may be passed to a `Formatter` that supports it.
 - `level` `<memoir.Level>` A `Level` that indicates which methods the `Logger` will implement for logging. 
 
 `levelLogger.addHandler(handler)`
-- `handler` `memoir.MetadataHandler` A Memoir `Handler` that supports a `Metadata` argument.
+- `handler` `<memoir.MetadataHandler>` A Memoir `Handler` that supports a `Metadata` argument.
 
 > The LevelLogger implementation is unique in that it may be assigned a `Level` in its constructor or a `Level` may be set using its `setLevel` method.  The `LevelLogger` will configure its interface according to the log `Level`.  JavaScript's [optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator can be used in order to only log messages that meet the specified `Level` constraint.  This strategy is aimed at improving performance.
 
@@ -62,7 +62,7 @@ The `Metadata` object may be passed to a `Formatter` that supports it.
 
 ### memoir.MetadataFormatter<MessageT, FormatT>(formatter)
 - Extends: `<memoir.Formatter>`
-- `formatter` `(message: MessageT, meta: Metadata) => FormatT` A function that will return the formatted message of type `FormatT`.
+- `formatter` `<(message: MessageT, meta: Metadata) => FormatT>` A function that will return the formatted message of type `FormatT`.
 
 ### memoir.RotatingFileHandler(options)
 - options `<FileHandlerOptions>`
