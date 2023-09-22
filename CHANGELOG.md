@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.4] - 2023-09-18
+### Fixed
+- Remove unnecessary nullish check.
+- Improve documentation.
+- Improve how the RotatingFileHandler handles error conditions.
+
 ## [2.0.3] - 2023-09-18
 ### Fixed
 - Fix bug in instantiation of Metadata. 
