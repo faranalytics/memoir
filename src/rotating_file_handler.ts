@@ -38,7 +38,7 @@ export class RotatingFileHandler extends MetadataHandler<string, string> {
         this.mode = mode;
     }
 
-    async handle(message: string, meta: Metadata) {
+    handle(message: string, meta: Metadata): void {
 
         if (Level[meta.level] >= this.level) {
 
@@ -51,47 +51,51 @@ export class RotatingFileHandler extends MetadataHandler<string, string> {
 
                 await this.mutex;
 
-                await fs.appendFile(this.path, message, { encoding: this.encoding, mode: this.mode, flag: 'a' });
+                try {
 
-                const stats = await fs.stat(this.path);
+                    await fs.appendFile(this.path, message, { encoding: this.encoding, mode: this.mode, flag: 'a' });
 
-                if (stats.isFile()) {
-                    if (stats.size > this.bytes) {
-                        if (this.rotations === 0) {
-                            await fs.rm(this.path);
-                        }
-                        else {
-                            for (let i = this.rotations - 1; i >= 0; i--) {
-                                let path;
-                                if (i == 0) {
-                                    path = `${this.path}`;
-                                }
-                                else {
-                                    path = `${this.path}.${i}`;
-                                }
+                    const stats = await fs.stat(this.path);
 
-                                try {
-                                    const stats = await fs.stat(path);
-                                    if (stats.isFile()) {
-                                        await fs.rename(path, `${this.path}.${i + 1}`);
+                    if (stats.isFile()) {
+                        if (stats.size > this.bytes) {
+                            if (this.rotations === 0) {
+                                await fs.rm(this.path);
+                            }
+                            else {
+                                for (let i = this.rotations - 1; i >= 0; i--) {
+                                    let path;
+                                    if (i == 0) {
+                                        path = `${this.path}`;
                                     }
+                                    else {
+                                        path = `${this.path}.${i}`;
+                                    }
+
+                                    try {
+                                        const stats = await fs.stat(path);
+                                        if (stats.isFile()) {
+                                            await fs.rename(path, `${this.path}.${i + 1}`);
+                                        }
+                                    }
+                                    catch (e) { /* flow-control */ }
                                 }
-                                catch (e) { /* flow-control */ }
                             }
                         }
                     }
                 }
+                catch (err) {
+                    console.error(err);
+                }
             })();
-
-            return this.mutex;
         }
     }
 
-    setFormatter(formatter: MetadataFormatter<string, string>) {
+    setFormatter(formatter: MetadataFormatter<string, string>): void {
         this.formatter = formatter;
     }
 
-    setLevel(level: Level) {
+    setLevel(level: Level): void {
         this.level = level;
     }
 }

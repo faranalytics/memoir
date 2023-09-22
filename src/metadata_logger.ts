@@ -20,7 +20,12 @@ export class MetadataLogger<MessageT, FormatT> extends Logger<MessageT, FormatT,
             const meta = new Metadata({ name: this.name, level });
             for (let i = 0; i < this.handlers.length; i = i + 1) {
                 if (level >= this.handlers[i].level) {
-                    await this.handlers[i].handle(message, meta);
+                    try {
+                        await this.handlers[i].handle(message, meta);
+                    }
+                    catch(err) {
+                        console.error(err);
+                    }
                 }
             }
         }

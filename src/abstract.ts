@@ -56,7 +56,7 @@ export abstract class Logger<MessageT, FormatT, MetadataT> {
 
     abstract log(level: Level, message: MessageT): void;
 
-    addHandler(handler: Handler<MessageT, FormatT, MetadataT>) {
+    addHandler(handler: Handler<MessageT, FormatT, MetadataT>): void {
         this.handlers.push(handler);
 
         for (const logger of this.loggers) {
@@ -64,7 +64,7 @@ export abstract class Logger<MessageT, FormatT, MetadataT> {
         }
     }
 
-    removeHandler(handler: Handler<MessageT, FormatT, MetadataT>) {
+    removeHandler(handler: Handler<MessageT, FormatT, MetadataT>): void {
         const handlers = [];
         for (const _handler of this.handlers) {
             if (_handler != handler) {

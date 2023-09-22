@@ -25,7 +25,7 @@ export class LevelLogger<MessageT, FormatT> extends MetadataLogger<MessageT, For
         this.configure();
     }
 
-    private configure() {
+    private configure(): void {
 
         delete this.base;
         delete this.debug;
@@ -59,7 +59,7 @@ export class LevelLogger<MessageT, FormatT> extends MetadataLogger<MessageT, For
         }
     }
 
-    public setLevel(level: Level) {
+    public setLevel(level: Level): void {
         this.level = level;
         this.configure();
     }
