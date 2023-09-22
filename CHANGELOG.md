@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.0.4] - 2023-09-18
+## [2.0.4] - 2023-09-22
 ### Fixed
 - Remove unnecessary nullish check.
 - Improve documentation.
