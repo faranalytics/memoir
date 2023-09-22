@@ -53,7 +53,7 @@ The `Metadata` object may be passed to a `Formatter` that supports it.
 `levelLogger.addHandler(handler)`
 - `handler` `<memoir.MetadataHandler>` A Memoir `Handler` that supports a `Metadata` argument.
 
-> The LevelLogger implementation is unique in that it may be assigned a `Level` in its constructor or a `Level` may be set using its `setLevel` method.  The `LevelLogger` will configure its interface according to the log `Level`.  JavaScript's [optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator can be used in order to only log messages that meet the specified `Level` constraint.  This strategy is aimed at improving performance.
+> **The LevelLogger implementation is unique in that it may be assigned a `Level` in its constructor or a `Level` may be set using its `setLevel` method.  The `LevelLogger` will configure its interface according to the log `Level`.  JavaScript's [optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator can be used in order to only log messages that meet the specified `Level` constraint.  This strategy is aimed at improving performance.**
 
 ### memoir.MetadataHandler<MessageT, FormatT>()
 - Extends: `<memoir.Handler>`
@@ -75,13 +75,13 @@ The `Metadata` object may be passed to a `Formatter` that supports it.
 ## Performant Logging
 Memoir provides a performant `Logger` class named `LevelLogger` that implements a dynamic logging interface.  `LevelLogger` may implement any of the common logging methods: `base`, `debug`, `info`, `warn`, and `error`.  The `LevelLogger` dynamically configures its interface to only implement the methods that are relevant for the specified logging `Level` that is passed to its constructor or set using its `setLevel` method.  This approach allows the programmer to take advantage of JavaScript's [optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator in order to eliminate unnecessary calls to the `Logger` and its `Handlers`.  
 
-Practically, it ensures that frequent calls to `LevelLogger.debug` are not evaluated unless the `LevelLogger` has been expressly configured to the `DEBUG` `Level`.
+**Practically, this strategy ensures that frequent calls to `LevelLogger.debug` are not evaluated unless the `LevelLogger` has been expressly configured to the `DEBUG` `Level`.**
 
 TypeScript will enforce the usage of the optional chaining operator when calling `LevelLogger`'s methods. Please see the examples for how to use the `LevelLogger` interface.
 
 ## Examples
 ### ConsoleHandler Logger
-In this simple example you will create a `LevelLogger`.  The `LevelLogger`'s `Handler` will be set to log at the `DEBUG` Level; however, the `LevelLogger` level will be set to `INFO`, which will log `INFO`, `WARN`, and `ERROR` messages; hence, this ensures that frequent calls throughout the codebase to `log.debug` will never be evaluated.  This is achieved by using JavaScript's [optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator.
+In this simple example you will create a `LevelLogger`.  The `LevelLogger`'s `Handler` will be set to log at the `DEBUG` Level; however, the `LevelLogger` level will be set to `INFO`, which will log `INFO`, `WARN`, and `ERROR` messages. This ensures that frequent calls throughout the codebase to `log.debug` will never be evaluated.  This is achieved by using JavaScript's [optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator.
 #### Code
 ```ts
 const formatter = (message: string, { name, level, func, url, line, col }: Metadata): string =>
