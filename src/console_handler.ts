@@ -11,7 +11,7 @@ export class ConsoleHandler<MessageT, FormatT> extends MetadataHandler<MessageT,
 
     handle(message: MessageT, meta: Metadata): void {
 
-        if (meta.level && Level[meta.level] >= this.level) {
+        if (Level[meta.level] >= this.level) {
 
             if (this.formatter) {
 
