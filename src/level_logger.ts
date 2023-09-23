@@ -25,7 +25,7 @@ export class LevelLogger<MessageT, FormatT> extends MetadataLogger<MessageT, For
         this.configure();
     }
 
-    private configure(): void {
+    protected configure(): void {
 
         delete this.base;
         delete this.debug;
