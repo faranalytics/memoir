@@ -9,7 +9,7 @@ export class ConsoleHandler<MessageT, FormatT> extends MetadataHandler<MessageT,
         this.handle = this.handle.bind(this);
     }
 
-    handle(message: MessageT, meta: Metadata): void {
+    public handle(message: MessageT, meta: Metadata): void {
 
         if (Level[meta.level] >= this.level) {
 

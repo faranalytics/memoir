@@ -14,7 +14,7 @@ export class MetadataLogger<MessageT, FormatT> extends Logger<MessageT, FormatT,
         this.log = this.log.bind(this);
     }
 
-    async log(level: Level, message: MessageT): Promise<void> {
+    public async log(level: Level, message: MessageT): Promise<void> {
 
         try {
             const meta = new Metadata({ name: this.name, level });

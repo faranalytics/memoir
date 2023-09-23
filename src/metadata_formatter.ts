@@ -15,7 +15,7 @@ export class MetadataFormatter<MessageT, FormatT> extends Formatter<MessageT, Fo
         this.formatter = formatter;
     }
 
-    format(message: MessageT, meta: Metadata): FormatT {
+    public format(message: MessageT, meta: Metadata): FormatT {
         return this.formatter(message, meta);
     }
 }

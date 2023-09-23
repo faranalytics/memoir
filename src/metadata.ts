@@ -6,13 +6,13 @@ export interface MetadataOptions {
 }
 
 export class Metadata {
-    name: string;
-    level: keyof typeof Level;
-    error?: Error;
-    func?: string;
-    url?: string;
-    line?: string;
-    col?: string;
+    public name: string;
+    public level: keyof typeof Level;
+    public error?: Error;
+    public func?: string;
+    public url?: string;
+    public line?: string;
+    public col?: string;
 
     constructor({ name, level }: MetadataOptions) {
         this.name = name;

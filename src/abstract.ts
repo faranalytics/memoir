@@ -13,7 +13,7 @@ export abstract class Formatter<MessageT, FormatT, MetadataT> {
         this.format = this.format.bind(this);
     }
 
-    abstract format(message: MessageT, meta: MetadataT): FormatT;
+    public abstract format(message: MessageT, meta: MetadataT): FormatT;
 }
 
 export abstract class Handler<MessageT, FormatT, MetadataT> {
@@ -54,9 +54,9 @@ export abstract class Logger<MessageT, FormatT, MetadataT> {
         }
     }
 
-    abstract log(level: Level, message: MessageT): void;
+    public abstract log(level: Level, message: MessageT): void;
 
-    addHandler(handler: Handler<MessageT, FormatT, MetadataT>): void {
+    public addHandler(handler: Handler<MessageT, FormatT, MetadataT>): void {
         this.handlers.push(handler);
 
         for (const logger of this.loggers) {
@@ -64,7 +64,7 @@ export abstract class Logger<MessageT, FormatT, MetadataT> {
         }
     }
 
-    removeHandler(handler: Handler<MessageT, FormatT, MetadataT>): void {
+    public removeHandler(handler: Handler<MessageT, FormatT, MetadataT>): void {
         const handlers = [];
         for (const _handler of this.handlers) {
             if (_handler != handler) {
