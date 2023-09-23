@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.5] - 2023-09-23
+### Changed
+- Improve documentation.
+### Fixed
+- Fix access modifiers.
+
 ## [2.0.4] - 2023-09-22
 ### Fixed
 - Remove unnecessary nullish check.
