@@ -20,7 +20,7 @@ npm install memoir
 ```
 
 ## Concepts
-Memoir implements concepts that are familiar in the logging domain i.e., `Levels`, `Loggers`, `Handlers`, and `Formatters`.  In addition to these familiar concepts, Memoir features a `Metadata` object that contains information about the logged message (e.g., the name of the function). It may be passed to `Formatters` that support it.  
+Memoir implements concepts that are familiar in the logging domain i.e., `Levels`, `Loggers`, `Handlers`, and `Formatters`.  In addition to these familiar concepts, Memoir features a `Metadata` object that contains relevant information about the logged message (e.g., the log Level, originating function name, etc.). It may be passed to `Formatters` that support it.  
 
 The following concepts are a subset of Memoir classes that are of practical use.  These concepts are used in the provided [`Examples`](#examples).
 
@@ -36,6 +36,7 @@ The following concepts are a subset of Memoir classes that are of practical use.
 - `name` `<string>` The name of the `Logger`.
 - `level` `<string>` The level of the log message represented as a string.
 - `func` `<string>` The name of the function where the `Logger` method was called. 
+- `url` `<string>` The file URL for the module where the `Logger` method was called.
 - `line` `<string>` The line number where the `Logger` method was called.
 - `col` `<string>` The column number where the `Logger` method was called.
 
