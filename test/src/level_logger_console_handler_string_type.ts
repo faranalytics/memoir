@@ -13,7 +13,7 @@ consoleHandler.setFormatter(metadataFormatter); // Set the Formatter on the Hand
 log.addHandler(consoleHandler); // Add the Handler to the Logger.
 
 log.debug?.("Because the LevelLogger's `level` property is set to Level.INFO, this method is never called.");
-log.info?.('Hello World.'); // Log a Hello World to the console.
-(function test() { log.info?.('Hello World.'); }());
+log.info?.('Hello, World!'); // Log a Hello World to the console.
+(function test() { log.info?.('Hello, World!'); }());
 log.setLevel(Level.DEBUG);
 log.debug?.("The LevelLogger's `level` property has been set to Level.DEBUG; hence, the method is called.");

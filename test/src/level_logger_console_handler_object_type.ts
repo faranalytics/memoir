@@ -11,5 +11,5 @@ const objectFormatter = new MetadataFormatter<object, string>({ formatter });
 objectHandler.setFormatter(objectFormatter);
 objectLogger.addHandler(objectHandler);
 
-objectLogger.info?.({ 'greeting': 'Hello World.' });
-(function test() { objectLogger.info?.({ 'greeting': 'Hello World.' }); }());
+objectLogger.info?.({ 'greeting': 'Hello, World!' });
+(function test() { objectLogger.info?.({ 'greeting': 'Hello, World!' }); }());
